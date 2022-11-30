@@ -1,0 +1,34 @@
+@use '../../base.scss';
+
+.navigation__list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navigation__item {
+}
+
+.navigation__link {
+  &:hover {
+    border-bottom: 2px solid black;
+  }
+}
+
+.active__link {
+  border-bottom: 2px solid black;
+}
+
+.signOutBtn {
+  border: none;
+  outline: none;
+  background: base.$base-blue;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  &:hover {
+    cursor: pointer;
+    background: base.$light-blue;
+  }
+}

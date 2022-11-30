@@ -1,1 +1,3 @@
-# rss-management-app
+### Project Management App
+
+#### Rolling Scopes School final project
