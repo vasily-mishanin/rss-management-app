@@ -1,4 +1,29 @@
-.footer {
-  height: 5rem;
-  background-color: lightgray;
+.footer_wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.footer_copyrights {
+  a {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.5rem;
+    img {
+      width: 2rem;
+    }
+  }
+}
+
+.footer_rss_link {
+  a {
+    display: block;
+    width: 4rem;
+    height: 2rem;
+    background: url(../../assets/logo-rss-js.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+  }
 }

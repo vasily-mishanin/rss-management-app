@@ -11,10 +11,14 @@ import { authSliceActions, isStoredTokenValid } from './store/reducers/authSlice
 
 function App() {
   console.log('App');
+  const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    //navigate('welcome');
+    if (!authState.isLoggedIn) {
+      navigate('/welcome');
+    }
     if (!isStoredTokenValid()) {
       dispatch(authSliceActions.signOut());
     }
