@@ -9,7 +9,7 @@ type LocalStorage = {
 };
 
 const USER = 'user';
-const TOKEN_LIFETIME_HOURS = 11;
+const TOKEN_LIFETIME_HOURS = 2;
 
 const calculatePassedHours = (dateA: Date, dateB: Date) => {
   const passedMilliseconds = dateA.getTime() - dateB.getTime();

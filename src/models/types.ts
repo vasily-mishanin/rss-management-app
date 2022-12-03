@@ -22,3 +22,9 @@ export interface IAuth {
 export interface ILogInSuccess {
   token: string;
 }
+
+export interface IUpdatedUser {
+  _id: string;
+  name: string;
+  login: string;
+}

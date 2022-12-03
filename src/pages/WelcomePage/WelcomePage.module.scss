@@ -1,0 +1,46 @@
+@use '../../base.scss';
+
+.welcome {
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  padding: 1rem;
+}
+
+.generalInfo {
+  grid-column: 1 / span 1;
+  grid-row: 3 / span 1;
+
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+
+  .hisection {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .avatar {
+      margin-bottom: 1rem;
+    }
+
+    .title {
+      //   font-size: 2rem;
+      //   font-weight: 400;
+    }
+  }
+}
+
+.projectInfo {
+  display: block;
+  grid-column: 1 / 3;
+
+  width: 90%;
+  padding: 2rem;
+  .title {
+    color: base.$base-blue;
+  }
+
+  background: url('../../assets/taiichi_ohno.jpg');
+}

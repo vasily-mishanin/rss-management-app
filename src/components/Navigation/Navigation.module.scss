@@ -11,19 +11,23 @@
 }
 
 .navigation__link {
+  color: white;
+
   &:hover {
-    border-bottom: 2px solid black;
+    border-bottom: 2px dashed white;
   }
 }
 
 .active__link {
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid white;
+  color: white;
 }
 
 .signOutBtn {
+  color: white;
   border: none;
   outline: none;
-  background: base.$base-blue;
+  background: none;
   font-size: 1rem;
   padding: 0.25rem;
   border-radius: 0.25rem;

@@ -16,47 +16,47 @@ function Navigation() {
   return (
     <ul className={classes.navigation__list}>
       {authState.isLoggedIn && (
-        <li>
-          <NavLink className={linkStyle} to='boards'>
-            Boards
-          </NavLink>
-        </li>
-      )}
+        <>
+          <li>
+            <NavLink className={linkStyle} to='new-board'>
+              Create new board
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className={linkStyle} to='profile'>
+              Edit profile
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className={linkStyle} to='/'>
+              Go to Main Page
+            </NavLink>
+          </li>
 
-      {authState.isLoggedIn && (
-        <li>
-          <NavLink className={linkStyle} to='/'>
-            Go to Main Page
-          </NavLink>
-        </li>
-      )}
-
-      {!authState.isLoggedIn && (
-        <li className={classes.navigation__item}>
-          {' '}
-          <NavLink
-            //className={({ isActive }) => (isActive ? classes.active__link : classes.navigation__link)}
-            className={linkStyle}
-            to='login'
-          >
-            Sign In
-          </NavLink>
-        </li>
+          <li>
+            <button className={classes.signOutBtn} onClick={handleSignOut}>
+              Sign Out
+            </button>
+          </li>
+        </>
       )}
       {!authState.isLoggedIn && (
-        <li>
-          {' '}
-          <NavLink className={linkStyle} to='register'>
-            Sign Up
-          </NavLink>
-        </li>
-      )}
-      {authState.isLoggedIn && (
-        <li>
-          <button className={classes.signOutBtn} onClick={handleSignOut}>
-            Sign Out
-          </button>
-        </li>
+        <>
+          <li className={classes.navigation__item}>
+            <NavLink
+              //className={({ isActive }) => (isActive ? classes.active__link : classes.navigation__link)}
+              className={linkStyle}
+              to='login'
+            >
+              Sign In
+            </NavLink>
+          </li>
+          <li>
+            <NavLink className={linkStyle} to='register'>
+              Sign Up
+            </NavLink>
+          </li>
+        </>
       )}
     </ul>
   );

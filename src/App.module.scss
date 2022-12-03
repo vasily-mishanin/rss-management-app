@@ -8,9 +8,17 @@
   &__header {
     display: flex;
     align-items: center;
-    height: 4rem;
-    background-color: khaki;
-    padding: 0 2rem;
+    height: 3rem;
+    padding: 2rem 2rem;
+    position: sticky;
+    top: 10 rem;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      135deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(9, 96, 121, 0.9724483543417367) 67%,
+      rgba(0, 212, 255, 1) 100%
+    );
   }
 
   &__main {
@@ -26,5 +34,25 @@
     flex-shrink: 0;
     background-color: base.$base-blue;
     padding: 0.25rem;
+  }
+}
+
+html:not([data-scroll='0']) {
+  header {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    background: rgb(2, 0, 36);
+    background: linear-gradient(
+      135deg,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(11, 121, 9, 0.6783307072829132) 73%,
+      rgba(0, 212, 255, 1) 100%
+    );
+    position: sticky;
+    top: 0;
+
+    transition: all 0.2s ease-in;
+    opacity: 0.95;
   }
 }

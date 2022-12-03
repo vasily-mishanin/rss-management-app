@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setupStore } from './store/store';
 import AuthPage from './pages/AuthPage/AuthPage';
+import WelcomePage from './pages/WelcomePage/WelcomePage';
+import Profile from './pages/Profile/Profile';
 
 const store = setupStore();
 
@@ -16,8 +18,9 @@ const ROUTES = [
     element: <App />,
     children: [
       // { path: '/', element: 'Addition MAIN Route' },
-      { path: 'welcome', element: <h1>Welcome</h1> },
-      { path: 'boards', element: <h1>Boards</h1> },
+      { path: 'welcome', element: <WelcomePage /> },
+      { path: 'new-board', element: <h1>NEW BOARD</h1> },
+      { path: 'profile', element: <Profile /> },
       { path: 'login', element: <AuthPage mode='LOGIN' /> },
       { path: 'register', element: <AuthPage mode='REGISTER' /> },
     ],

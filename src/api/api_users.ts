@@ -1,6 +1,6 @@
-import { ifError } from 'assert';
 import { baseURL } from '../models/constants';
 import type { IError, ILogInSuccess, IUser } from '../models/types';
+import { IUpdatedUser } from '../models/types';
 
 export async function registerUser(user: IUser) {
   try {
@@ -33,6 +33,32 @@ export async function logIn(user: IUser) {
       console.log('logIn Success');
       const data: ILogInSuccess = await res.json();
       console.log('loggedIn', data);
+      return data;
+    } else {
+      const error: IError = await res.json();
+      throw error;
+    }
+  } catch (err) {
+    throw err;
+  }
+}
+
+export async function updateUser(user: IUser, token: string) {
+  const { name, login, password, _id } = user;
+  try {
+    const res = await fetch(`${baseURL}/users/${_id}`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, login, password }),
+    });
+    if (res.ok) {
+      console.log('Update Success');
+      const data: IUpdatedUser = await res.json();
+      console.log('UpdatedUser', data);
       return data;
     } else {
       const error: IError = await res.json();

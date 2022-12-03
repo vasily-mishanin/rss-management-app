@@ -8,6 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import type { IUser } from './models/types';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { authSliceActions, isStoredTokenValid } from './store/reducers/authSlice';
+import { storeScroll } from './helpers/headerAnimation';
+
+// Update scroll position for first time
+storeScroll();
 
 function App() {
   console.log('App');
