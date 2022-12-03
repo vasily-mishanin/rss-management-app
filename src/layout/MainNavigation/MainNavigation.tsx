@@ -11,7 +11,7 @@ const MainNavigation = () => {
       <Link to='welcome'>
         <AppLogo text='GirAff' />
       </Link>
-      <p className={classes.greeting}>Hi, {authSlice.user.login}</p>
+      {authSlice.isLoggedIn && <p className={classes.greeting}>Hi, {authSlice.user.login}</p>}
       <Navigation />
     </div>
   );

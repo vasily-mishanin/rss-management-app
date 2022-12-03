@@ -3,13 +3,15 @@ import type { IAuth, IError, ILogInSuccess, IUser } from '../../models/types';
 import * as api_users from '../../api/api_users';
 
 type LocalStorage = {
+  name: string;
   login: string;
   token: string;
   authDate: string;
+  _id: string;
 };
 
 const USER = 'user';
-const TOKEN_LIFETIME_HOURS = 2;
+const TOKEN_LIFETIME_HOURS = 11;
 
 const calculatePassedHours = (dateA: Date, dateB: Date) => {
   const passedMilliseconds = dateA.getTime() - dateB.getTime();
@@ -20,8 +22,8 @@ const calculatePassedHours = (dateA: Date, dateB: Date) => {
 export const registerUserThunk = createAsyncThunk('auth/registerUser', async (user: IUser, thunkAPI) => {
   try {
     const result = await api_users.registerUser(user);
+    console.log('registerUserThunk-result', result);
     const payload = { ...result, password: user.password };
-    console.log('result', payload);
     return payload;
   } catch (err) {
     console.error(err);
@@ -32,8 +34,22 @@ export const registerUserThunk = createAsyncThunk('auth/registerUser', async (us
 export const signInUserThunk = createAsyncThunk('auth/signInUser', async (user: IUser, thunkAPI) => {
   try {
     const result = await api_users.logIn(user);
+    const payload = { name: user.name, login: user.login, token: result.token, _id: result._id };
     console.log('signInUserThunk', result);
-    return { login: user.login, token: result.token };
+    return payload;
+  } catch (err) {
+    console.error(err);
+    throw thunkAPI.rejectWithValue(err);
+  }
+});
+
+export const updateUserThunk = createAsyncThunk('auth/updateUser', async (user: IUser, thunkAPI) => {
+  console.log('updateUserThunk');
+  try {
+    const result = await api_users.updateUser(user);
+    console.log('updateUserThunk', result);
+    const payload = { name: result.name, login: result.login, _id: result._id };
+    return payload;
   } catch (err) {
     console.error(err);
     throw thunkAPI.rejectWithValue(err);
@@ -62,8 +78,10 @@ const getInitialState = (): IAuth => {
   const storedUser = getLocalStorageUser();
   return {
     user: {
+      name: storedUser ? storedUser.name : '',
       login: storedUser ? storedUser.login : '',
       password: '',
+      _id: storedUser ? storedUser.login : '',
     },
     token: storedUser ? storedUser.token : '',
     isLoggedIn: !!storedUser?.token,
@@ -104,27 +122,54 @@ const authSlice = createSlice({
     buider.addCase(signInUserThunk.pending.type, (state, action: PayloadAction<ILogInSuccess>) => {
       state.isLoading = true;
     });
-    buider.addCase(
-      signInUserThunk.fulfilled.type,
-      (state, action: PayloadAction<{ login: string; token: string }>) => {
-        state.isLoading = false;
-        state.token = action.payload.token;
-        state.user.login = action.payload.login;
-        state.isLoggedIn = true;
-        const date = new Date();
-        state.authDate = date.toISOString();
-        const userLocalStorage: LocalStorage = {
-          login: state.user.login,
-          token: state.token,
-          authDate: state.authDate,
-        };
-        state.error = { statusCode: null, message: '' };
-        setLocalStorage(USER, userLocalStorage);
-      }
-    );
+    buider.addCase(signInUserThunk.fulfilled.type, (state, action: PayloadAction<IUser>) => {
+      state.isLoading = false;
+      state.token = action.payload?.token || '';
+      state.user._id = action.payload._id;
+      state.user.login = action.payload.login;
+      state.user.name = action.payload.name;
+      state.isLoggedIn = true;
+      const date = new Date();
+      state.authDate = date.toISOString();
+      const userLocalStorage: LocalStorage = {
+        name: state.user.name,
+        login: state.user.login,
+        token: state.token,
+        authDate: state.authDate,
+        _id: state.user._id,
+      };
+      state.error = { statusCode: null, message: '' };
+      setLocalStorage(USER, userLocalStorage);
+    });
     buider.addCase(signInUserThunk.rejected.type, (state, action: PayloadAction<IError>) => {
       state.isLoading = false;
       state.isLoggedIn = false;
+      state.error = action.payload;
+    });
+
+    //UPDATE USER
+    buider.addCase(updateUserThunk.pending.type, (state, action: PayloadAction<IUser>) => {
+      state.isLoading = true;
+    });
+    buider.addCase(updateUserThunk.fulfilled.type, (state, action: PayloadAction<IUser>) => {
+      state.isLoading = false;
+      const { name, login, _id } = action.payload;
+      state.user.login = login;
+      state.user.name = name;
+      state.user._id = _id;
+      const userLocalStorage: LocalStorage = {
+        name: name,
+        login: login,
+        _id: _id,
+        token: state.token,
+        authDate: state.authDate,
+      };
+      state.error = { statusCode: null, message: '' };
+      setLocalStorage(USER, userLocalStorage);
+    });
+    buider.addCase(updateUserThunk.rejected.type, (state, action: PayloadAction<IError>) => {
+      state.isLoading = false;
+      //state.isLoggedIn = false;
       state.error = action.payload;
     });
   },

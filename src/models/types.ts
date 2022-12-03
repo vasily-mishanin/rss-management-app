@@ -4,10 +4,11 @@ export interface IError {
 }
 
 export interface IUser {
-  _id?: string;
+  _id: string;
   login: string;
   password: string;
-  name?: string;
+  name: string;
+  token?: string;
 }
 
 export interface IAuth {
@@ -21,6 +22,7 @@ export interface IAuth {
 
 export interface ILogInSuccess {
   token: string;
+  _id: string;
 }
 
 export interface IUpdatedUser {

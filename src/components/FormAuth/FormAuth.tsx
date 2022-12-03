@@ -22,19 +22,25 @@ function FormAuth({ mode }: AuthFormProps) {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  console.log('AuthPage', authState);
+  console.log('FormAuth', authState);
 
   useEffect(() => {
-    console.log('AuthPage -> useEffect', authState.error);
+    console.log('FormAuth -> useEffect', authState.error);
     dispatch(authSliceActions.clearError());
 
     if (authState.isLoggedIn) {
       navigate('/');
     }
 
-    if (authState.user._id) {
+    if (!authState.isLoggedIn && authState.user._id) {
       // auto login
-      dispatch(signInUserThunk({ login: authState.user.login, password: authState.user.password }));
+      const user = {
+        name: authState.user.name,
+        login: authState.user.login,
+        password: authState.user.password,
+        _id: authState.user._id,
+      };
+      dispatch(signInUserThunk(user));
     }
   }, [authState.isLoggedIn, authState.user._id, mode]);
 
@@ -45,7 +51,8 @@ function FormAuth({ mode }: AuthFormProps) {
       user = {
         login: inputsData.login,
         password: inputsData.password,
-        name: inputsData.name,
+        name: inputsData.name || '',
+        _id: '',
       };
       dispatch(registerUserThunk(user));
     }
@@ -53,6 +60,8 @@ function FormAuth({ mode }: AuthFormProps) {
       user = {
         login: inputsData.login,
         password: inputsData.password,
+        name: inputsData.name || '',
+        _id: '',
       };
       dispatch(signInUserThunk(user));
     }
@@ -101,7 +110,7 @@ function FormAuth({ mode }: AuthFormProps) {
           </button>
         )}
       </div>
-      {authState.error.message && <p className={classes.registrationError}>{registrationErrorMessage}</p>}
+      {authState.error?.message && <p className={classes.registrationError}>{registrationErrorMessage}</p>}
     </form>
   );
 }

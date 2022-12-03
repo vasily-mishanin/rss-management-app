@@ -3,11 +3,12 @@ import type { IError, ILogInSuccess, IUser } from '../models/types';
 import { IUpdatedUser } from '../models/types';
 
 export async function registerUser(user: IUser) {
+  const { name, login, password } = user;
   try {
     const res = await fetch(`${baseURL}/auth/signup`, {
       method: 'POST',
       headers: { Accept: 'application.json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(user),
+      body: JSON.stringify({ name, login, password }),
     });
     if (res.ok) {
       const data: IUser = await res.json();
@@ -43,7 +44,7 @@ export async function logIn(user: IUser) {
   }
 }
 
-export async function updateUser(user: IUser, token: string) {
+export async function updateUser(user: IUser) {
   const { name, login, password, _id } = user;
   try {
     const res = await fetch(`${baseURL}/users/${_id}`, {
@@ -51,7 +52,7 @@ export async function updateUser(user: IUser, token: string) {
       headers: {
         Accept: 'application.json',
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({ name, login, password }),
     });
