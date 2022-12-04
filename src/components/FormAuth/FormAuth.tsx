@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { authSliceActions, registerUserThunk, signInUserThunk } from '../../store/reducers/authSlice';
 import { IUser } from '../../models/types';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material';
 
 type Inputs = {
   name?: string;
@@ -45,7 +46,7 @@ function FormAuth({ mode }: AuthFormProps) {
   }, [authState.isLoggedIn, authState.user._id, mode]);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    console.log(inputsData);
+    console.log('onSubmit', inputsData);
     let user: IUser;
     if (mode === 'REGISTER') {
       user = {
@@ -105,9 +106,9 @@ function FormAuth({ mode }: AuthFormProps) {
         {authState.isLoading ? (
           <p className={classes.authSpinner}>Loading ...</p>
         ) : (
-          <button className={classes.authBtn} disabled={!formState.isDirty}>
+          <Button type='submit' variant='contained' className={classes.authBtn} disabled={!formState.isDirty}>
             {buttonName}
-          </button>
+          </Button>
         )}
       </div>
       {authState.error?.message && <p className={classes.registrationError}>{registrationErrorMessage}</p>}

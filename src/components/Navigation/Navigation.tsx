@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import classes from './Navigation.module.scss';
 import { authSliceActions } from '../../store/reducers/authSlice';
@@ -6,9 +6,11 @@ import { authSliceActions } from '../../store/reducers/authSlice';
 function Navigation() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleSignOut = () => {
     console.log('handleSignOut');
     dispatch(authSliceActions.signOut());
+    navigate('/');
   };
 
   const linkStyle = ({ isActive }: { isActive: boolean }) =>

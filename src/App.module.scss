@@ -12,13 +12,7 @@
     padding: 2rem 2rem;
     position: sticky;
     top: 10 rem;
-    background: rgb(2, 0, 36);
-    background: linear-gradient(
-      135deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(9, 96, 121, 0.9724483543417367) 67%,
-      rgba(0, 212, 255, 1) 100%
-    );
+    background: base.$gradient-main;
   }
 
   &__main {
@@ -43,12 +37,7 @@ html:not([data-scroll='0']) {
     align-items: center;
     height: 3rem;
     background: rgb(2, 0, 36);
-    background: linear-gradient(
-      135deg,
-      rgba(2, 0, 36, 1) 0%,
-      rgba(11, 121, 9, 0.6783307072829132) 73%,
-      rgba(0, 212, 255, 1) 100%
-    );
+    background: base.$gradient-secondary;
     position: sticky;
     top: 0;
 

@@ -1,15 +1,13 @@
 @use '../../base.scss';
 
-.authForm {
+.profileForm {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
-}
-
-.authBtn {
-  &:hover {
-  }
+  margin-bottom: 1rem;
+  width: 100%;
 }
 
 .authSpinner {

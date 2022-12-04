@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { setupStore } from './store/store';
 import AuthPage from './pages/AuthPage/AuthPage';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
-import Profile from './pages/Profile/Profile';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 const store = setupStore();
 
@@ -20,7 +20,7 @@ const ROUTES = [
       // { path: '/', element: 'Addition MAIN Route' },
       { path: 'welcome', element: <WelcomePage /> },
       { path: 'new-board', element: <h1>NEW BOARD</h1> },
-      { path: 'profile', element: <Profile /> },
+      { path: 'profile', element: <ProfilePage /> },
       { path: 'login', element: <AuthPage mode='LOGIN' /> },
       { path: 'register', element: <AuthPage mode='REGISTER' /> },
     ],

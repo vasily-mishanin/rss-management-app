@@ -2,6 +2,8 @@ import { baseURL } from '../models/constants';
 import type { IError, ILogInSuccess, IUser } from '../models/types';
 import { IUpdatedUser } from '../models/types';
 
+// REGISTER
+
 export async function registerUser(user: IUser) {
   const { name, login, password } = user;
   try {
@@ -21,6 +23,8 @@ export async function registerUser(user: IUser) {
     throw err;
   }
 }
+
+//LOGIN
 
 export async function logIn(user: IUser) {
   const { login, password } = user;
@@ -44,6 +48,7 @@ export async function logIn(user: IUser) {
   }
 }
 
+//UPDATE
 export async function updateUser(user: IUser) {
   const { name, login, password, _id } = user;
   try {
@@ -60,6 +65,31 @@ export async function updateUser(user: IUser) {
       console.log('Update Success');
       const data: IUpdatedUser = await res.json();
       console.log('UpdatedUser', data);
+      return data;
+    } else {
+      const error: IError = await res.json();
+      throw error;
+    }
+  } catch (err) {
+    throw err;
+  }
+}
+
+//DELETE
+export async function deleteUser(userId: string, token: string) {
+  try {
+    const res = await fetch(`${baseURL}/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.ok) {
+      console.log('Delete Success');
+      const data: IUpdatedUser = await res.json();
+      console.log('DeletedUser', data);
       return data;
     } else {
       const error: IError = await res.json();

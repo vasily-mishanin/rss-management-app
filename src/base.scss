@@ -2,3 +2,19 @@ $base-blue: #5da7db;
 $light-blue: #81c6e8;
 
 $main-red: #ff6464;
+
+$gradient-main: linear-gradient(
+  135deg,
+  rgba(2, 0, 36, 1) 0%,
+  rgba(9, 96, 121, 0.9724483543417367) 67%,
+  rgba(0, 212, 255, 1) 100%
+);
+
+$gradient-secondary: linear-gradient(
+  135deg,
+  rgba(2, 0, 36, 1) 0%,
+  rgba(11, 121, 9, 0.6783307072829132) 73%,
+  rgba(0, 212, 255, 1) 100%
+);
+
+$shadow-main: -8px 20px 55px -25px rgba(0, 0, 0, 0.75);

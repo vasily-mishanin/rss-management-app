@@ -1,9 +1,9 @@
 @use '../../base.scss';
 
 .authPage {
-  border: 1px solid black;
   border-radius: 0.2rem;
   width: 20rem;
   flex-grow: 0;
   padding: 1rem;
+  box-shadow: base.$shadow-main;
 }

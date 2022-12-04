@@ -20,7 +20,7 @@ function Confirmation({ questionText, onConfirm, onCancel }: ConfirmationProps) 
     <div className={classes.confirmation}>
       <h4>{questionText}</h4>
       <div className={classes.actions}>
-        <Button variant='outlined' onClick={confirmHandler}>
+        <Button variant='outlined' color='error' onClick={confirmHandler}>
           Yes
         </Button>
         <Button variant='outlined' onClick={cancelHandler}>

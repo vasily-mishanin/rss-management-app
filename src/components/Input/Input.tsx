@@ -15,14 +15,15 @@ type InputProps = {
   patternValue: RegExp;
   message: string;
   error: FieldError | null;
+  title?: string;
 };
 
-const Input = ({ type, label, register, required, patternValue, error, message }: InputProps) => {
+const Input = ({ type, label, register, required, patternValue, error, message, title }: InputProps) => {
   return (
     <div className={classes.wrapper}>
       <fieldset className={classes.input}>
         <legend>
-          <label htmlFor={label}>{label}</label>
+          <label htmlFor={label}>{title ? title : label}</label>
         </legend>
         <input
           id={label}

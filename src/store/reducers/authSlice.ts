@@ -81,7 +81,7 @@ const getInitialState = (): IAuth => {
       name: storedUser ? storedUser.name : '',
       login: storedUser ? storedUser.login : '',
       password: '',
-      _id: storedUser ? storedUser.login : '',
+      _id: storedUser ? storedUser._id : '',
     },
     token: storedUser ? storedUser.token : '',
     isLoggedIn: !!storedUser?.token,
