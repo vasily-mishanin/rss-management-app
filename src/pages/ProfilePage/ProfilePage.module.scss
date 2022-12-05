@@ -12,6 +12,10 @@
   padding: 1rem;
   height: auto;
   box-shadow: base.$shadow-main;
+
+  .title {
+    text-align: center;
+  }
 }
 
 .snackbarDeleted {

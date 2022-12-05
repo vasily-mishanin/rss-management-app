@@ -9,8 +9,9 @@ import { Button, Snackbar } from '@mui/material';
 import * as api_users from '../../api/api_users';
 import type { SnackbarProps, Alert } from '@mui/material';
 import { authSliceActions } from '../../store/reducers/authSlice';
+import { uiSliceActions } from '../../store/reducers/uiSlice';
 
-function Profile() {
+function ProfilePage() {
   const [dialog, setDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const dispatch = useAppDispatch();
@@ -38,6 +39,10 @@ function Profile() {
     setDialog(false);
   };
 
+  const handleCloseModal = () => {
+    dispatch(uiSliceActions.toggleNewBoardModal());
+  };
+
   const closeSnackbar = () => {
     setOpen(false);
     dispatch(authSliceActions.signOut());
@@ -51,7 +56,7 @@ function Profile() {
   return (
     <div className={classes.profilePage}>
       {dialog && (
-        <ModalWindow>
+        <ModalWindow onClose={handleCloseModal}>
           <Confirmation
             questionText='Are you sure you want to delete this user?'
             onConfirm={handleConfirmConfirmation}
@@ -59,6 +64,8 @@ function Profile() {
           />
         </ModalWindow>
       )}
+
+      <h3 className={classes.title}>Here you can change your profile data</h3>
 
       <FormProfile />
 
@@ -78,4 +85,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfilePage;

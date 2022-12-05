@@ -9,9 +9,16 @@
 
   margin-top: -7.5rem;
   margin-left: -10rem;
-  padding: 1rem;
 
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  //justify-content: center;
   align-items: center;
+  gap: 2rem;
+}
+
+.closeBtn {
+  //position: absolute;
+  align-self: flex-end;
+  justify-self: flex-start;
 }

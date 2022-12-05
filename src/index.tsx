@@ -9,6 +9,8 @@ import { setupStore } from './store/store';
 import AuthPage from './pages/AuthPage/AuthPage';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
+import BoardsPage from './pages/BoardsPage/BoardsPage';
+import * as api_boards from './api/api_boards';
 
 const store = setupStore();
 
@@ -17,9 +19,8 @@ const ROUTES = [
     path: '/',
     element: <App />,
     children: [
-      // { path: '/', element: 'Addition MAIN Route' },
+      { path: '/', element: <BoardsPage /> },
       { path: 'welcome', element: <WelcomePage /> },
-      { path: 'new-board', element: <h1>NEW BOARD</h1> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'login', element: <AuthPage mode='LOGIN' /> },
       { path: 'register', element: <AuthPage mode='REGISTER' /> },

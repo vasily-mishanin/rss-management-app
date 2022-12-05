@@ -1,16 +1,21 @@
-import ModalBackdrop from '../ModalBackdrop/ModalBackdrop';
+import ModalBackdrop from './ModalBackdrop/ModalBackdrop';
 import ReactPortal from '../ReactPortal';
-import ModalOverlay from '../ModalOverlay/ModalOverlay';
+import ModalOverlay from './ModalOverlay/ModalOverlay';
 import React from 'react';
 
-function ModalWindow({ children }: { children: React.ReactNode }) {
+type ModalProps = {
+  children: React.ReactNode;
+  onClose: () => void;
+};
+
+function ModalWindow({ children, onClose }: ModalProps) {
   return (
     <>
       <ReactPortal wrapperId='backdrop-root'>
         <ModalBackdrop />
       </ReactPortal>
-      <ReactPortal wrapperId='overlay-rootxs'>
-        <ModalOverlay>{children}</ModalOverlay>
+      <ReactPortal wrapperId='overlay-root'>
+        <ModalOverlay onClose={onClose}>{children}</ModalOverlay>
       </ReactPortal>
     </>
   );

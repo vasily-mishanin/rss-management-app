@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import classes from './Navigation.module.scss';
 import { authSliceActions } from '../../store/reducers/authSlice';
+import { uiSliceActions } from '../../store/reducers/uiSlice';
 
 function Navigation() {
   const authState = useAppSelector((state) => state.authReducer);
@@ -13,6 +14,11 @@ function Navigation() {
     navigate('/');
   };
 
+  const handleNewBoard = () => {
+    navigate('/');
+    dispatch(uiSliceActions.toggleNewBoardModal());
+  };
+
   const linkStyle = ({ isActive }: { isActive: boolean }) =>
     isActive ? classes.active__link : classes.navigation__link;
   return (
@@ -20,13 +26,13 @@ function Navigation() {
       {authState.isLoggedIn && (
         <>
           <li>
-            <NavLink className={linkStyle} to='new-board'>
-              Create new board
-            </NavLink>
+            <button className={classes.newBoardBtn} onClick={handleNewBoard}>
+              Create New Board
+            </button>
           </li>
           <li>
             <NavLink className={linkStyle} to='profile'>
-              Edit profile
+              <b style={{ color: 'salmon' }}>{authState.user.name || authState.user.login}</b>
             </NavLink>
           </li>
           <li>

@@ -1,5 +1,15 @@
 @use '../../base.scss';
 
+@mixin headerBtn {
+  color: white;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+}
+
 .navigation__list {
   display: flex;
   justify-content: center;
@@ -24,15 +34,18 @@
 }
 
 .signOutBtn {
-  color: white;
-  border: none;
-  outline: none;
-  background: none;
-  font-size: 1rem;
-  padding: 0.25rem;
-  border-radius: 0.25rem;
+  @include headerBtn;
   &:hover {
     cursor: pointer;
-    background: base.$light-blue;
+    background: base.$main-red;
+  }
+}
+
+.newBoardBtn {
+  @include headerBtn;
+
+  &:hover {
+    cursor: pointer;
+    background: base.$base-blue;
   }
 }
