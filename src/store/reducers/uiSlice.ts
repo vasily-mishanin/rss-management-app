@@ -1,15 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState = {
   showNewBoardModal: false,
+  showNewTaskModal: false,
 };
 
 const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    toggleNewBoardModal: (state) => {
-      state.showNewBoardModal = !state.showNewBoardModal;
+    toggleNewBoardModal: (state, action: PayloadAction<boolean>) => {
+      state.showNewBoardModal = action.payload;
+    },
+    toggleNewTaskModal: (state, action: PayloadAction<boolean>) => {
+      state.showNewTaskModal = action.payload;
     },
   },
 });

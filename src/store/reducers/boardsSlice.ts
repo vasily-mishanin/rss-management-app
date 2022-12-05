@@ -1,11 +1,23 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { IBoard, IColumn, IError, INewBoard, INewColumnProps, TGetAllColumns } from '../../models/types';
+import type {
+  IBoard,
+  IColumn,
+  IError,
+  INewBoard,
+  INewColumnProps,
+  INewTask,
+  ITask,
+  TGetAllColumns,
+  TGetAllTasks,
+} from '../../models/types';
 import * as api_boards from '../../api/api_boards';
 import * as api_columns from '../../api/api_columns';
+import * as api_tasks from '../../api/api_tasks';
 
 interface IBoardsSlice {
   boards: IBoard[];
   columns: IColumn[];
+  tasks: ITask[];
   error: IError;
   isLoading: boolean;
 }
@@ -14,7 +26,6 @@ interface IBoardsSlice {
 
 export const getAllBoardsThunk = createAsyncThunk('boards/getAllBoards', async (token: string, thunkAPI) => {
   try {
-    console.log('getAllBoardsThunk-result');
     const payload = await api_boards.getAllBoards(token);
     return payload;
   } catch (err) {
@@ -28,7 +39,6 @@ export const createBoardThunk = createAsyncThunk(
   async (newBoard: INewBoard, thunkAPI) => {
     try {
       const result = await api_boards.createBoard(newBoard);
-      console.log('createBoardThunk-result', result);
       const payload = { ...result };
       return payload;
     } catch (err) {
@@ -47,7 +57,6 @@ export const createColumnThunk = createAsyncThunk(
     const { boardId, token, newColumn } = createData;
     try {
       const result = await api_columns.createColumn(boardId, token, newColumn);
-      console.log('createColumnThunk-result', result);
       const payload = { ...result };
       return payload;
     } catch (err) {
@@ -62,8 +71,38 @@ export const getAllColumnsThunk = createAsyncThunk(
   'columns/getAllColumns',
   async (data: TGetAllColumns, thunkAPI) => {
     try {
-      console.log('getAllBoardsThunk-result');
       const payload = await api_columns.getAllColumns(data);
+      return payload;
+    } catch (err) {
+      console.error(err);
+      throw thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+// TASKS
+
+// CREATE TASKS
+export const createTaskThunk = createAsyncThunk(
+  'tasks/createTask',
+  async (createData: INewTask, thunkAPI) => {
+    try {
+      const result = await api_tasks.createTask(createData);
+      const payload = { ...result };
+      return payload;
+    } catch (err) {
+      console.error(err);
+      throw thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+
+// GET ALL TASKS
+export const getAllTasksThunk = createAsyncThunk(
+  'tasks/getAllTasks',
+  async (reqData: TGetAllTasks, thunkAPI) => {
+    try {
+      const payload = await api_tasks.getAllTasks(reqData);
       return payload;
     } catch (err) {
       console.error(err);
@@ -75,6 +114,7 @@ export const getAllColumnsThunk = createAsyncThunk(
 const initialState: IBoardsSlice = {
   boards: [],
   columns: [],
+  tasks: [],
   error: { statusCode: null, message: '' },
   isLoading: false,
 };
@@ -146,9 +186,52 @@ const boardsSlice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
     });
+
+    //TASKS
+    //CREATE TASK
+    buider.addCase(createTaskThunk.pending.type, (state, action: PayloadAction<ITask>) => {
+      state.isLoading = true;
+    });
+    buider.addCase(createTaskThunk.fulfilled.type, (state, action: PayloadAction<ITask>) => {
+      state.isLoading = false;
+      state.tasks.push(action.payload);
+      state.error = { statusCode: null, message: '' };
+    });
+    buider.addCase(createTaskThunk.rejected.type, (state, action: PayloadAction<IError>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
+
+    //GET ALL TASKS
+    buider.addCase(getAllTasksThunk.pending.type, (state, action: PayloadAction<ITask[]>) => {
+      state.isLoading = true;
+    });
+    buider.addCase(getAllTasksThunk.fulfilled.type, (state, action: PayloadAction<ITask[]>) => {
+      state.isLoading = false;
+      state.tasks = mergeTasks(state.tasks, action.payload);
+      state.error = { statusCode: null, message: '' };
+    });
+    buider.addCase(getAllTasksThunk.rejected.type, (state, action: PayloadAction<IError>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    });
   },
 });
 
 export const boardsSliceActions = boardsSlice.actions;
 
 export default boardsSlice.reducer;
+
+//helpers
+function mergeTasks(tasks1: ITask[], tasks2: ITask[]) {
+  let result: ITask[] = [];
+  let heap = [...tasks1, ...tasks2];
+
+  heap.forEach((task) => {
+    if (result.findIndex((rt) => rt._id === task._id) === -1) {
+      result.push(task);
+    }
+  });
+
+  return result;
+}

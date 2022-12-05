@@ -16,23 +16,21 @@ function BoardPage() {
   const uiState = useAppSelector((s) => s.uiReducer);
   const boardsState = useAppSelector((s) => s.boardsReducer);
   const currentBoard = boardsState.boards.find((board) => board._id === params.boardId);
-  console.log(params);
 
   //FETCH ALL COLUMNS
   useEffect(() => {
     if (params.boardId && authState.isLoggedIn) {
-      console.log('useEffect');
       const reqData = { token: authState.token, boardId: params.boardId };
       dispatch(getAllColumnsThunk(reqData));
     }
   }, [authState, dispatch, params.boardId]);
 
   const handleAddColumn = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal());
+    dispatch(uiSliceActions.toggleNewBoardModal(true));
   };
 
   const handleClose = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal());
+    dispatch(uiSliceActions.toggleNewBoardModal(false));
   };
 
   return (
@@ -46,6 +44,7 @@ function BoardPage() {
             label='columnName'
             title='New Column Title'
             message='Enter column title in latin letters (3 or more)'
+            description={undefined}
           />
         </ModalWindow>
       )}

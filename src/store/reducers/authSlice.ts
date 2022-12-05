@@ -22,7 +22,6 @@ const calculatePassedHours = (dateA: Date, dateB: Date) => {
 export const registerUserThunk = createAsyncThunk('auth/registerUser', async (user: IUser, thunkAPI) => {
   try {
     const result = await api_users.registerUser(user);
-    console.log('registerUserThunk-result', result);
     const payload = { ...result, password: user.password };
     return payload;
   } catch (err) {
@@ -35,7 +34,6 @@ export const signInUserThunk = createAsyncThunk('auth/signInUser', async (user: 
   try {
     const result = await api_users.logIn(user);
     const payload = { name: user.name, login: user.login, token: result.token, _id: result._id };
-    console.log('signInUserThunk', result);
     return payload;
   } catch (err) {
     console.error(err);
@@ -44,10 +42,8 @@ export const signInUserThunk = createAsyncThunk('auth/signInUser', async (user: 
 });
 
 export const updateUserThunk = createAsyncThunk('auth/updateUser', async (user: IUser, thunkAPI) => {
-  console.log('updateUserThunk');
   try {
     const result = await api_users.updateUser(user);
-    console.log('updateUserThunk', result);
     const payload = { name: result.name, login: result.login, _id: result._id };
     return payload;
   } catch (err) {
@@ -64,7 +60,6 @@ export const isStoredTokenValid = () => {
     const lastLoggedInDate = new Date(user.authDate);
     const now = new Date();
     const passedHours = calculatePassedHours(now, lastLoggedInDate);
-    console.log('passedHours', passedHours);
     return passedHours < TOKEN_LIFETIME_HOURS;
   }
   return false;

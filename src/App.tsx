@@ -14,7 +14,6 @@ import { storeScroll } from './helpers/headerAnimation';
 storeScroll();
 
 function App() {
-  console.log('App');
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

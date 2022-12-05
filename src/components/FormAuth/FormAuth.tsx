@@ -23,10 +23,8 @@ function FormAuth({ mode }: AuthFormProps) {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  console.log('FormAuth', authState);
 
   useEffect(() => {
-    console.log('FormAuth -> useEffect', authState.error);
     dispatch(authSliceActions.clearError());
 
     if (authState.isLoggedIn) {
@@ -46,7 +44,6 @@ function FormAuth({ mode }: AuthFormProps) {
   }, [authState.isLoggedIn, authState.user._id, mode]);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    console.log('onSubmit', inputsData);
     let user: IUser;
     if (mode === 'REGISTER') {
       user = {

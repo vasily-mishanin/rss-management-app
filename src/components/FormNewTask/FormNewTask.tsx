@@ -1,33 +1,25 @@
-import classes from './FormBoardColumn.module.scss';
+import classes from './FormNewTask.module.scss';
 import InputBoards from '../InputBoards/InputBoards';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createBoardThunk } from '../../store/reducers/boardsSlice';
-import { INewBoard } from '../../models/types';
 import { boardsSliceActions } from '../../store/reducers/boardsSlice';
 import { useEffect } from 'react';
-import type { INewColumnProps } from '../../models/types';
-import { createColumnThunk } from '../../store/reducers/boardsSlice';
+import { createTaskThunk } from '../../store/reducers/boardsSlice';
 import { INewTask } from '../../models/types';
 
 type Inputs = {
-  boardName?: string;
-  columnName?: string;
   taskName?: string;
+  taskDescription?: string;
 };
 
 export interface IFormProps {
   onClose: () => void;
-  label: string;
-  title: string;
-  message: string;
   columnId?: string;
-  description?: string;
 }
 
-function FormBoardColumn({ onClose, label, title, message, columnId, description }: IFormProps) {
+function FormNewTask({ onClose, columnId }: IFormProps) {
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
@@ -39,31 +31,21 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
   }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    if (label === 'boardName') {
-      const newBoard: INewBoard = {
-        title: inputsData.boardName || '',
-        owner: authState.user._id,
-        users: [authState.user._id],
+    if (params.boardId) {
+      const createTaskData: INewTask = {
+        boardId: params.boardId,
+        columnId: columnId || '',
         token: authState.token,
+        newTask: {
+          title: inputsData.taskName || 'no name',
+          order: 0,
+          description: inputsData.taskDescription || 'no description',
+          userId: 0,
+          users: [authState.user.name],
+        },
       };
-
-      dispatch(createBoardThunk(newBoard));
-
+      dispatch(createTaskThunk(createTaskData));
       onClose();
-      navigate('/');
-    }
-
-    if (label === 'columnName') {
-      if (params.boardId) {
-        const createColumnData: INewColumnProps = {
-          boardId: params.boardId,
-          token: authState.token,
-          newColumn: { title: inputsData.columnName || 'no name', order: 0 },
-        };
-        dispatch(createColumnThunk(createColumnData));
-
-        onClose();
-      }
     }
 
     if (formState.isSubmitSuccessful) {
@@ -71,26 +53,28 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
     }
   };
 
-  const error = () => {
-    if (label === 'boardName') {
-      return formState.errors.boardName;
-    }
-    if (label === 'columnName') {
-      return formState.errors.columnName;
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <InputBoards
         type='text'
-        label={label}
-        title={title}
+        label='taskName'
+        title='New Task Title'
         register={register}
         required
         patternValue={/[A-Za-z0-9 ]{3,}/}
-        error={error() || null}
-        message={message}
+        error={formState.errors.taskName || null}
+        message='Enter task title in latin letters (3 or more)'
+      />
+
+      <InputBoards
+        type='text'
+        label='taskDescription'
+        title='Description'
+        register={register}
+        required
+        patternValue={/[A-Za-z0-9 ]{3,}/}
+        error={formState.errors.taskDescription || null}
+        message='Enter description in latin letters (3 or more)'
       />
 
       <div className={classes.actions}>
@@ -118,4 +102,4 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
   );
 }
 
-export default FormBoardColumn;
+export default FormNewTask;

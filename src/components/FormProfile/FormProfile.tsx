@@ -18,15 +18,8 @@ function FormProfile() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  //console.log('FormProfile', authState);
-
-  // useEffect(() => {
-  //   console.log('FormProfile -> useEffect', authState.error);
-  // }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    console.log('SubmitHandler - inputsData:', inputsData);
-
     const user: IUser = {
       login: inputsData.login || authState.user.login,
       password: inputsData.password || authState.user.password,

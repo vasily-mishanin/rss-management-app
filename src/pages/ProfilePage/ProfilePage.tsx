@@ -19,7 +19,6 @@ function ProfilePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('Profile-useEffect');
     if (!authState.isLoggedIn) {
       navigate('/');
     }
@@ -40,7 +39,7 @@ function ProfilePage() {
   };
 
   const handleCloseModal = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal());
+    dispatch(uiSliceActions.toggleNewBoardModal(false));
   };
 
   const closeSnackbar = () => {

@@ -9,14 +9,13 @@ function Navigation() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const handleSignOut = () => {
-    console.log('handleSignOut');
     dispatch(authSliceActions.signOut());
     navigate('/');
   };
 
   const handleNewBoard = () => {
     navigate('/');
-    dispatch(uiSliceActions.toggleNewBoardModal());
+    dispatch(uiSliceActions.toggleNewBoardModal(true));
   };
 
   const linkStyle = ({ isActive }: { isActive: boolean }) =>

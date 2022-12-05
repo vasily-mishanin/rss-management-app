@@ -20,7 +20,7 @@ function BoardsPage() {
   }, [authState, dispatch]);
 
   const handleClose = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal());
+    dispatch(uiSliceActions.toggleNewBoardModal(false));
   };
 
   return (

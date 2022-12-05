@@ -78,3 +78,23 @@ export type TGetAllColumns = {
   token: string;
   boardId: string;
 };
+
+export interface INewTask {
+  boardId: string;
+  columnId: string;
+  token: string;
+
+  newTask: {
+    title: string;
+    order: number;
+    description: string;
+    userId: number;
+    users: string[];
+  };
+}
+
+export type TGetAllTasks = {
+  token: string;
+  boardId: string;
+  columnId: string;
+};
