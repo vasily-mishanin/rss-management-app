@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, createHashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { setupStore } from './store/store';
 import AuthPage from './pages/AuthPage/AuthPage';
@@ -30,7 +30,7 @@ const ROUTES = [
   },
 ];
 
-const router = createBrowserRouter(ROUTES);
+const router = createHashRouter(ROUTES);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
