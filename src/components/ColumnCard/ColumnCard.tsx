@@ -46,13 +46,15 @@ function ColumnCard({ column }: { column: IColumn }) {
         </Typography>
       </CardContent>
 
-      {tasks.map((task) => (
-        <div>
-          <h4>{task.title}</h4>
-          <p>{task.description}</p>
-          <hr />
-        </div>
-      ))}
+      <ul>
+        {tasks.map((task) => (
+          <li key={task._id}>
+            <h4>{task.title}</h4>
+            <p>{task.description}</p>
+            <hr />
+          </li>
+        ))}
+      </ul>
 
       <CardActions className={classes.actions}>
         <Button size='small' color='error'>
