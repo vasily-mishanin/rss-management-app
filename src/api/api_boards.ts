@@ -4,7 +4,7 @@ import type { IBoard, IError, INewBoard } from '../models/types';
 //GET ALL BOARDS
 export async function getAllBoards(token: string) {
   try {
-    const res = await fetch(`${baseURL}/`, {
+    const res = await fetch(`${baseURL}/boards`, {
       method: 'GET',
       headers: {
         Accept: 'application.json',
@@ -13,9 +13,9 @@ export async function getAllBoards(token: string) {
       },
     });
     if (res.ok) {
-      console.log('getBoard Success');
+      console.log('getAllBoards Success');
       const data: IBoard[] = await res.json();
-      console.log('getBoard', data);
+      console.log('getAllBoards', data);
       return data;
     } else {
       const error: IError = await res.json();

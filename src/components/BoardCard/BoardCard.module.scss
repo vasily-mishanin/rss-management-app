@@ -1,0 +1,14 @@
+.board {
+  border: 1px solid wheat;
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+
+  .content {
+  }
+
+  .actions {
+    align-self: flex-end;
+  }
+}

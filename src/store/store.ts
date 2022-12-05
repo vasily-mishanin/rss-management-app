@@ -3,10 +3,16 @@ import authReducer from './reducers/authSlice';
 import uiReducer from './reducers/uiSlice';
 import boardsReducer from './reducers/boardsSlice';
 
-const rootReducer = combineReducers({ authReducer, uiReducer, boardsReducer });
+const rootReducer = combineReducers({
+  authReducer,
+  uiReducer,
+  boardsReducer,
+});
 
 export const setupStore = () => {
-  return configureStore({ reducer: rootReducer });
+  return configureStore({
+    reducer: rootReducer,
+  });
 };
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -52,6 +52,11 @@ export interface IColumn {
   boardId: string;
 }
 
+export interface INewColumn {
+  title: string;
+  order: number;
+}
+
 export interface ITask {
   _id: string;
   title: string;
@@ -62,3 +67,14 @@ export interface ITask {
   userId: string;
   users: string[];
 }
+
+export interface INewColumnProps {
+  boardId: string;
+  token: string;
+  newColumn: INewColumn;
+}
+
+export type TGetAllColumns = {
+  token: string;
+  boardId: string;
+};

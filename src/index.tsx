@@ -11,6 +11,7 @@ import WelcomePage from './pages/WelcomePage/WelcomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
 import * as api_boards from './api/api_boards';
+import BoardPage from './pages/BoardPage/BoardPage';
 
 const store = setupStore();
 
@@ -24,6 +25,7 @@ const ROUTES = [
       { path: 'profile', element: <ProfilePage /> },
       { path: 'login', element: <AuthPage mode='LOGIN' /> },
       { path: 'register', element: <AuthPage mode='REGISTER' /> },
+      { path: 'boards/:boardId', element: <BoardPage /> },
     ],
   },
 ];

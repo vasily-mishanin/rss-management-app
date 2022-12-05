@@ -2,8 +2,7 @@ import classes from './InputBoards.module.scss';
 import { Path, FieldError, useForm, UseFormRegister, SubmitHandler } from 'react-hook-form';
 
 interface IFormValues {
-  [inputName: string]: string;
-  boardName: string;
+  [name: string]: string;
 }
 
 type InputProps = {
