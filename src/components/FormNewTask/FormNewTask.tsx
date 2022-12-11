@@ -6,8 +6,13 @@ import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { boardsSliceActions } from '../../store/reducers/boardsSlice';
 import { useEffect } from 'react';
-import { createTaskThunk } from '../../store/reducers/boardsSlice';
-import { INewTask } from '../../models/types';
+import { FormDataTypes, INewTask, ITask } from '../../models/types';
+import {
+  form_mode,
+  form_subject,
+  VALIDATE_description_REGEXPR,
+  VALIDATE_name_REGEXPR,
+} from '../../models/constants';
 
 type Inputs = {
   taskName?: string;
@@ -16,15 +21,19 @@ type Inputs = {
 
 export interface IFormProps {
   onClose: () => void;
+  onFormSubmit: (data: FormDataTypes) => void;
   columnId?: string;
+  mode: form_mode;
+  subject: form_subject;
 }
 
-function FormNewTask({ onClose, columnId }: IFormProps) {
+function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormProps) {
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
+  const uiSlice = useAppSelector((state) => state.uiReducer);
 
   useEffect(() => {
     dispatch(boardsSliceActions.clearError());
@@ -32,19 +41,17 @@ function FormNewTask({ onClose, columnId }: IFormProps) {
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     if (params.boardId) {
-      const createTaskData: INewTask = {
+      const taskData: INewTask | ITask = {
         boardId: params.boardId,
-        columnId: columnId || '',
-        token: authState.token,
-        newTask: {
-          title: inputsData.taskName || 'no name',
-          order: 0,
-          description: inputsData.taskDescription || 'no description',
-          userId: 0,
-          users: [authState.user.name],
-        },
+        columnId: uiSlice.updatingColumnId,
+        title: inputsData.taskName || 'no name',
+        order: 0,
+        description: inputsData.taskDescription || 'no description',
+        userId: '0',
+        users: [authState.user._id],
+        ...(mode === form_mode.UPDATE && { _id: uiSlice.updatingTaskId }),
       };
-      dispatch(createTaskThunk(createTaskData));
+      onFormSubmit(taskData);
       onClose();
     }
 
@@ -58,12 +65,12 @@ function FormNewTask({ onClose, columnId }: IFormProps) {
       <InputBoards
         type='text'
         label='taskName'
-        title='New Task Title'
+        title='Task Title'
         register={register}
         required
-        patternValue={/[A-Za-z0-9 ]{3,}/}
+        patternValue={VALIDATE_name_REGEXPR}
         error={formState.errors.taskName || null}
-        message='Enter task title in latin letters (3 or more)'
+        message='Enter task title (3 or more characters)'
       />
 
       <InputBoards
@@ -72,9 +79,10 @@ function FormNewTask({ onClose, columnId }: IFormProps) {
         title='Description'
         register={register}
         required
-        patternValue={/[A-Za-z0-9 ]{3,}/}
+        patternValue={VALIDATE_description_REGEXPR}
         error={formState.errors.taskDescription || null}
-        message='Enter description in latin letters (3 or more)'
+        message='Enter description (5 or more characters)'
+        variant='textarea'
       />
 
       <div className={classes.actions}>

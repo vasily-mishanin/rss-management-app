@@ -4,11 +4,39 @@
 
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+
+  width: 275px;
+  min-height: 50vh;
+  max-height: 90%;
+  overflow-y: scroll;
 
   .content {
+    .titlebox {
+      display: flex;
+      justify-content: center;
+
+      &:hover .editIcon {
+        visibility: visible;
+      }
+
+      .title {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .editIcon {
+        visibility: hidden;
+      }
+    }
   }
 
   .actions {
+    justify-self: flex-end;
     align-self: flex-end;
+
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
 }

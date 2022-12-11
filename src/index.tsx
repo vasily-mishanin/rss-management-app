@@ -5,15 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider, createHashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { setupStore } from './store/store';
+import { store } from './store/store';
 import AuthPage from './pages/AuthPage/AuthPage';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
-import * as api_boards from './api/api_boards';
+//import * as api_boards from './api/api_boards';
 import BoardPage from './pages/BoardPage/BoardPage';
-
-const store = setupStore();
 
 const ROUTES = [
   {

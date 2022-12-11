@@ -11,6 +11,7 @@
 
   legend {
     label {
+      font-size: 0.85rem;
     }
   }
 
@@ -21,6 +22,14 @@
     padding-left: 1rem;
     font-size: 1rem;
     width: 100%;
+  }
+
+  .textarea {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
   }
 }
 

@@ -7,7 +7,7 @@ function ListBoards({ boards }: { boards: IBoard[] }) {
     <ul className={classes.list}>
       {boards.map((board) => (
         <li key={board._id}>
-          <BoardCard title={board.title} description='no descriptioin' boardId={board._id} />
+          <BoardCard title={board.title} _id={board._id} />
         </li>
       ))}
     </ul>

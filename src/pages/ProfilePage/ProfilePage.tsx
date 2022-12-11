@@ -7,7 +7,6 @@ import FormProfile from '../../components/FormProfile/FormProfile';
 import { useNavigate } from 'react-router-dom';
 import { Button, Snackbar } from '@mui/material';
 import * as api_users from '../../api/api_users';
-import type { SnackbarProps, Alert } from '@mui/material';
 import { authSliceActions } from '../../store/reducers/authSlice';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 
@@ -39,7 +38,7 @@ function ProfilePage() {
   };
 
   const handleCloseModal = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal(false));
+    dispatch(uiSliceActions.setShowNewSubjectModal(false));
   };
 
   const closeSnackbar = () => {

@@ -36,10 +36,10 @@ export interface IBoard {
   title: string;
   owner: string;
   users: string[];
+  description?: string;
 }
 
 export interface INewBoard {
-  token: string;
   title: string;
   owner: string;
   users: string[];
@@ -53,6 +53,7 @@ export interface IColumn {
 }
 
 export interface INewColumn {
+  boardId: string;
   title: string;
   order: number;
 }
@@ -68,33 +69,17 @@ export interface ITask {
   users: string[];
 }
 
-export interface INewColumnProps {
-  boardId: string;
-  token: string;
-  newColumn: INewColumn;
-}
+export type INewTask = Omit<ITask, '_id'>;
 
 export type TGetAllColumns = {
   token: string;
   boardId: string;
 };
 
-export interface INewTask {
-  boardId: string;
-  columnId: string;
-  token: string;
-
-  newTask: {
-    title: string;
-    order: number;
-    description: string;
-    userId: number;
-    users: string[];
-  };
-}
-
 export type TGetAllTasks = {
   token: string;
   boardId: string;
   columnId: string;
 };
+
+export type FormDataTypes = INewBoard | IBoard | INewColumn | IColumn | INewTask | ITask;

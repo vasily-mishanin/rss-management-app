@@ -43,7 +43,7 @@ function FormProfile() {
         title='New Name'
         register={register}
         required
-        patternValue={/[A-Za-z0-9]/}
+        patternValue={/^[A-Za-z0-9]$/}
         error={formState.errors.name ? formState.errors.name : null}
         message='Enter name in latin letters or digits'
       ></Input>

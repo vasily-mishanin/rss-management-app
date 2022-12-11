@@ -4,13 +4,11 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createBoardThunk } from '../../store/reducers/boardsSlice';
-import { INewBoard } from '../../models/types';
-import { boardsSliceActions } from '../../store/reducers/boardsSlice';
 import { useEffect } from 'react';
-import type { INewColumnProps } from '../../models/types';
-import { createColumnThunk } from '../../store/reducers/boardsSlice';
-import { INewTask } from '../../models/types';
+import type { IBoard, IColumn, INewBoard, INewTask, FormDataTypes } from '../../models/types';
+import { boardsSliceActions } from '../../store/reducers/boardsSlice';
+import { boardsApi } from '../../services/BoardsService';
+import { form_mode, form_subject } from '../../models/constants';
 
 type Inputs = {
   boardName?: string;
@@ -20,16 +18,30 @@ type Inputs = {
 
 export interface IFormProps {
   onClose: () => void;
+  onFormSubmit: (value: FormDataTypes, mode: form_mode, subjec: form_subject) => void;
   label: string;
   title: string;
   message: string;
   columnId?: string;
   description?: string;
+  mode: form_mode;
+  subject: form_subject;
 }
 
-function FormBoardColumn({ onClose, label, title, message, columnId, description }: IFormProps) {
+function FormBoardColumn({
+  onClose,
+  onFormSubmit,
+  label,
+  title,
+  message,
+  columnId,
+  description,
+  mode,
+  subject,
+}: IFormProps) {
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
+  const uiState = useAppSelector((state) => state.uiReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
@@ -39,30 +51,29 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
   }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    if (label === 'boardName') {
-      const newBoard: INewBoard = {
+    if (subject === form_subject.BOARD) {
+      const updatedBoard = {
         title: inputsData.boardName || '',
         owner: authState.user._id,
         users: [authState.user._id],
-        token: authState.token,
+        ...(mode === form_mode.UPDATE && { _id: uiState.updatingBoardId }),
       };
 
-      dispatch(createBoardThunk(newBoard));
-
       onClose();
+      onFormSubmit(updatedBoard, mode, subject);
+
       navigate('/');
     }
 
-    if (label === 'columnName') {
+    if (subject === form_subject.COLUMN) {
       if (params.boardId) {
-        const createColumnData: INewColumnProps = {
+        const createColumnData: Omit<IColumn, '_id'> = {
           boardId: params.boardId,
-          token: authState.token,
-          newColumn: { title: inputsData.columnName || 'no name', order: 0 },
+          title: inputsData.columnName || 'no name',
+          order: 0,
         };
-        dispatch(createColumnThunk(createColumnData));
-
         onClose();
+        onFormSubmit(createColumnData, mode, subject);
       }
     }
 
@@ -72,23 +83,37 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
   };
 
   const error = () => {
-    if (label === 'boardName') {
+    if (subject === form_subject.BOARD) {
       return formState.errors.boardName;
     }
-    if (label === 'columnName') {
+    if (subject === form_subject.COLUMN) {
       return formState.errors.columnName;
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+      {mode === form_mode.ADD && subject === form_subject.BOARD && (
+        <h4 className={classes.title}>Add new board</h4>
+      )}
+      {mode === form_mode.UPDATE && subject === form_subject.BOARD && (
+        <h4 className={classes.title}>Update this board</h4>
+      )}
+
+      {mode === form_mode.ADD && subject === form_subject.COLUMN && (
+        <h4 className={classes.title}>Add new column</h4>
+      )}
+      {mode === form_mode.UPDATE && subject === form_subject.COLUMN && (
+        <h4 className={classes.title}>Update this column</h4>
+      )}
+
       <InputBoards
         type='text'
         label={label}
         title={title}
         register={register}
         required
-        patternValue={/[A-Za-z0-9 ]{3,}/}
+        patternValue={/^[A-Za-z0-9 ]{3,}$/}
         error={error() || null}
         message={message}
       />
@@ -108,7 +133,8 @@ function FormBoardColumn({ onClose, label, title, message, columnId, description
               className={classes.addBtn}
               disabled={!formState.isDirty}
             >
-              Add
+              {mode === form_mode.ADD && 'Add'}
+              {mode === form_mode.UPDATE && 'Update'}
             </Button>
           </div>
         )}
