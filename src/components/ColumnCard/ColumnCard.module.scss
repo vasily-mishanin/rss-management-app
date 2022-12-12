@@ -1,3 +1,5 @@
+@use '../../base.scss';
+
 .column {
   border: 1px solid wheat;
   cursor: pointer;
@@ -10,6 +12,19 @@
   min-height: 50vh;
   max-height: 90%;
   overflow-y: scroll;
+
+  //background: url(../../assets/wood-pattern.png);
+
+  background-color: #fdfdfe;
+  opacity: 1;
+  background-image: radial-gradient(#f6c107 0.4px, #fdfdfe 0.4px);
+  background-size: 8px 8px;
+
+  &:hover {
+    transition: transform 200ms;
+    transform: translateY(-1px);
+    box-shadow: base.$shadow-third;
+  }
 
   .content {
     .titlebox {

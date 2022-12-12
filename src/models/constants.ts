@@ -25,5 +25,8 @@ export enum form_subject {
   TASK = 'TASK',
 }
 
-export const VALIDATE_name_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*()0-9 ]{3,}$/;
-export const VALIDATE_description_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*()0-9 ]{5,}$/;
+export const VALIDATE_name_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{3,}$/;
+export const VALIDATE_description_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{5,}$/;
+export const VALIDATE_passport_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{8,}$/;
+
+export const VALIDATE_login_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{3,}$/;

@@ -7,6 +7,7 @@ import { authSliceActions, registerUserThunk, signInUserThunk } from '../../stor
 import { IUser } from '../../models/types';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
+import { VALIDATE_login_REGEXPR, VALIDATE_passport_REGEXPR } from '../../models/constants';
 
 type Inputs = {
   name?: string;
@@ -86,18 +87,18 @@ function FormAuth({ mode }: AuthFormProps) {
         label='Login'
         register={register}
         required
-        patternValue={/[A-Za-z0-9]/}
+        patternValue={VALIDATE_login_REGEXPR}
         error={formState.errors.login ? formState.errors.login : null}
-        message='Enter login in latin letters or digits'
+        message='Enter login in 3 or more \"A-Za-z!@#$%^&*():0-9-\ " symbols '
       ></Input>
       <Input
         type='password'
         label='Password'
         register={register}
         required
-        patternValue={/[A-Za-z0-9]{8,}/}
+        patternValue={VALIDATE_passport_REGEXPR}
         error={formState.errors.password ? formState.errors.password : null}
-        message='Password should consist of at least 8 latin letters or digits'
+        message='Enter password in 8 or more \"A-Za-z!@#$%^&*():0-9- \" symbols'
       ></Input>
       <div className={classes.actions}>
         {authState.isLoading ? (

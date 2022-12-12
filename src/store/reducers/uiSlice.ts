@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ITask } from '../../models/types';
 
 const initialState = {
   showNewSubjectModal: false,
@@ -7,6 +8,7 @@ const initialState = {
   showUpdateTaskModal: false,
   showConfirmDeleteBoardModal: false,
   showConfirmDeleteColumnModal: false,
+  showConfirmDeleteTaskModal: false,
 
   removingBoardId: '',
   updatingBoardId: '',
@@ -16,6 +18,8 @@ const initialState = {
 
   removingTaskId: '',
   updatingTaskId: '',
+
+  //updatingTask: ITask,
 };
 
 const uiSlice = createSlice({
@@ -45,6 +49,10 @@ const uiSlice = createSlice({
       state.showConfirmDeleteColumnModal = action.payload;
     },
 
+    setShowConfirmDeleteTaskModal: (state, action: PayloadAction<boolean>) => {
+      state.showConfirmDeleteTaskModal = action.payload;
+    },
+
     setRemovingBoardId: (state, action: PayloadAction<string>) => {
       state.removingBoardId = action.payload;
     },
@@ -58,6 +66,14 @@ const uiSlice = createSlice({
 
     setUpdatingColumnId: (state, action: PayloadAction<string>) => {
       state.updatingColumnId = action.payload;
+    },
+
+    setRemovingTaskId: (state, action: PayloadAction<string>) => {
+      state.removingTaskId = action.payload;
+    },
+
+    setUpdatingTaskId: (state, action: PayloadAction<string>) => {
+      state.updatingTaskId = action.payload;
     },
   },
 });

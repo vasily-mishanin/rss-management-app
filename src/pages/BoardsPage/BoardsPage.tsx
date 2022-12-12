@@ -1,11 +1,9 @@
 import ModalWindow from '../../components/ModalWindow/ModalWindow';
 import classes from './BoardsPage.module.scss';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
-import uiSlice, { uiSliceActions } from '../../store/reducers/uiSlice';
+import { uiSliceActions } from '../../store/reducers/uiSlice';
 import FormBoardColumn from '../../components/FormBoardColumn/FormBoardColumn';
 import ListBoards from '../../components/ListBoards/ListBoards';
-// import { getAllBoardsThunk } from '../../store/reducers/boardsSlice';
-import { useEffect } from 'react';
 import { boardsApi } from '../../services/BoardsService';
 import Confirmation from '../../components/Confirmation/Confirmation';
 import { form_mode, form_subject } from '../../models/constants';
@@ -14,14 +12,11 @@ import { IBoard, INewBoard, FormDataTypes } from '../../models/types';
 function BoardsPage() {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector((state) => state.uiReducer);
-  // const boardsState = useAppSelector((state) => state.boardsReducer);
   const authState = useAppSelector((state) => state.authReducer);
-  const { data: boards, error, isLoading, isFetching } = boardsApi.useGetAllBoardsQuery('');
+  const { data: boards } = boardsApi.useGetAllBoardsQuery('');
   const [addNewBoard, resultAddBoard] = boardsApi.useAddNewBoardMutation();
   const [updateBoard, resultUpdateBoard] = boardsApi.useUpdateBoardMutation();
   const [deleteBoardById, resultDeleteBoard] = boardsApi.useDeleteBoardByIdMutation();
-
-  console.log(boards);
 
   const handleClose = () => {
     dispatch(uiSliceActions.setShowNewSubjectModal(false));

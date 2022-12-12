@@ -38,7 +38,7 @@ function FormColumnEdit({ onClose, fieldValue }: FormColumnEditProps) {
   };
 
   const handleSubmit = async () => {
-    console.log('handleSubmit');
+    ('handleSubmit');
     const updatedColumn: IColumn = {
       _id: uiSlice.updatingColumnId,
       title: columnTitle,

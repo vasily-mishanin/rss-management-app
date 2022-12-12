@@ -5,9 +5,7 @@ import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
-import type { IBoard, IColumn, INewBoard, INewTask, FormDataTypes } from '../../models/types';
-import { boardsSliceActions } from '../../store/reducers/boardsSlice';
-import { boardsApi } from '../../services/BoardsService';
+import type { IColumn, FormDataTypes } from '../../models/types';
 import { form_mode, form_subject } from '../../models/constants';
 
 type Inputs = {
@@ -45,10 +43,6 @@ function FormBoardColumn({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
-
-  useEffect(() => {
-    dispatch(boardsSliceActions.clearError());
-  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     if (subject === form_subject.BOARD) {

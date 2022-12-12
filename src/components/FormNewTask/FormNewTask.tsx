@@ -4,8 +4,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useAppSelector, useAppDispatch } from '../../hooks/redux';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { boardsSliceActions } from '../../store/reducers/boardsSlice';
-import { useEffect } from 'react';
 import { FormDataTypes, INewTask, ITask } from '../../models/types';
 import {
   form_mode,
@@ -13,6 +11,7 @@ import {
   VALIDATE_description_REGEXPR,
   VALIDATE_name_REGEXPR,
 } from '../../models/constants';
+import { tasksApi } from '../../services/TaskService';
 
 type Inputs = {
   taskName?: string;
@@ -35,11 +34,9 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
   const params = useParams();
   const uiSlice = useAppSelector((state) => state.uiReducer);
 
-  useEffect(() => {
-    dispatch(boardsSliceActions.clearError());
-  }, []);
-
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
+    //const [currentTask, setCurrentTask] = useState<ITask>({});
+
     if (params.boardId) {
       const taskData: INewTask | ITask = {
         boardId: params.boardId,
@@ -60,6 +57,21 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
     }
   };
 
+  // to fill form inputs with current data
+  let currentTask: ITask | null = null;
+
+  if (mode === form_mode.UPDATE && subject === form_subject.TASK) {
+    const boardId = params.boardId;
+    const columnId = uiSlice.updatingColumnId;
+    const taskId = uiSlice.updatingTaskId;
+    if (boardId && columnId && taskId) {
+      const { data } = tasksApi.useGetTaskByIdQuery({ boardId, columnId, taskId });
+      if (data) {
+        currentTask = data;
+      }
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <InputBoards
@@ -71,6 +83,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         patternValue={VALIDATE_name_REGEXPR}
         error={formState.errors.taskName || null}
         message='Enter task title (3 or more characters)'
+        defaultValue={currentTask ? currentTask.title : undefined}
       />
 
       <InputBoards
@@ -83,6 +96,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         error={formState.errors.taskDescription || null}
         message='Enter description (5 or more characters)'
         variant='textarea'
+        defaultValue={currentTask ? currentTask.description : undefined}
       />
 
       <div className={classes.actions}>
@@ -100,7 +114,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
               className={classes.addBtn}
               disabled={!formState.isDirty}
             >
-              Add
+              {mode === form_mode.UPDATE ? 'Update' : 'Add'}
             </Button>
           </div>
         )}

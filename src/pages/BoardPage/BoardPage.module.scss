@@ -6,6 +6,11 @@
   flex-direction: column;
   align-self: flex-start;
 
+  .navigation {
+    font-size: 1.5rem;
+    display: flex;
+  }
+
   .columns {
     display: flex;
     flex-direction: row;

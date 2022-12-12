@@ -15,6 +15,7 @@ type InputProps = {
   error: FieldError | null;
   title?: string;
   variant?: 'input' | 'textarea';
+  defaultValue?: string;
 };
 
 const InputBoards = ({
@@ -27,6 +28,7 @@ const InputBoards = ({
   message,
   title,
   variant,
+  defaultValue,
 }: InputProps) => {
   return (
     <div className={classes.wrapper}>
@@ -45,6 +47,7 @@ const InputBoards = ({
               pattern: { value: patternValue, message },
             })}
             placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            defaultValue={defaultValue ? defaultValue : ''}
           />
         ) : (
           <input
@@ -55,6 +58,7 @@ const InputBoards = ({
               pattern: { value: patternValue, message },
             })}
             placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            defaultValue={defaultValue ? defaultValue : ''}
           />
         )}
       </fieldset>

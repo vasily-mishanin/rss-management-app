@@ -4,7 +4,7 @@ import { IBoard, IColumn, INewColumn } from '../models/types';
 import type { RootState } from '../store/store';
 
 export const columnsApi = createApi({
-  reducerPath: 'boardApi',
+  reducerPath: 'columnsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: baseURL,
     prepareHeaders: (headers, api) => {
@@ -22,6 +22,13 @@ export const columnsApi = createApi({
       providesTags: (result) => ['Column'],
     }),
 
+    getColumnById: builder.mutation<IColumn, { boardId: string; columnId: string }>({
+      query: ({ boardId, columnId }) => ({
+        url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}`,
+        method: methods.GET,
+      }),
+    }),
+
     addNewColumn: builder.mutation<IColumn, INewColumn>({
       query: (newColumnData) => {
         const { boardId, title, order } = newColumnData;
@@ -32,13 +39,6 @@ export const columnsApi = createApi({
         };
       },
       invalidatesTags: ['Column'],
-    }),
-
-    getColumnById: builder.mutation<IColumn, { boardId: string; columnId: string }>({
-      query: ({ boardId, columnId }) => ({
-        url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}`,
-        method: methods.GET,
-      }),
     }),
 
     updateColumn: builder.mutation<IColumn, IColumn>({

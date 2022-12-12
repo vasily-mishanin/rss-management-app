@@ -4,33 +4,33 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { IconButton } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+
 import type { IColumn } from '../../models/types';
 
 import ModalWindow from '../ModalWindow/ModalWindow';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useParams } from 'react-router-dom';
-import { getAllTasksThunk } from '../../store/reducers/boardsSlice';
 import { useEffect, useState } from 'react';
 import FormColumnEdit from '../FormColumnEdit/FormColumnEdit';
+import ListTasks from '../ListTasks/ListTasks';
+import { tasksApi } from '../../services/TaskService';
 
 function ColumnCard({ column }: { column: IColumn }) {
-  const [formMode, setFromMode] = useState(false);
+  const [formMode, setFormMode] = useState(false);
   const dispatch = useAppDispatch();
   const authState = useAppSelector((s) => s.authReducer);
   const uiSlice = useAppSelector((s) => s.uiReducer);
-  const boardsState = useAppSelector((s) => s.boardsReducer);
   const params = useParams();
 
-  //FETCH ALL TASKS
-  useEffect(() => {
-    if (params.boardId && authState.isLoggedIn) {
-      const reqData = { token: authState.token, boardId: params.boardId, columnId: column._id };
-      dispatch(getAllTasksThunk(reqData));
-    }
-  }, [authState, dispatch, params.boardId]);
+  const {
+    data: tasks,
+    isLoading,
+    isFetching,
+    error,
+  } = tasksApi.useGetAllTasksInColumnQuery({ boardId: params.boardId || '', columnId: column._id });
 
   const onAddTask = () => {
     dispatch(uiSliceActions.toggleShowNewTaskModal(true));
@@ -43,19 +43,17 @@ function ColumnCard({ column }: { column: IColumn }) {
   };
 
   const handleEditColumn = () => {
-    console.log('handleEditColumn');
+    ('handleEditColumn');
     dispatch(uiSliceActions.setUpdatingColumnId(column._id));
     if (params.boardId) {
       dispatch(uiSliceActions.setUpdatingBoardId(params.boardId));
     }
-    setFromMode(true);
+    setFormMode(true);
   };
 
   const handleFromClose = () => {
-    setFromMode(false);
+    setFormMode(false);
   };
-
-  const tasks = boardsState.tasks.filter((task) => task.columnId === column._id);
 
   return (
     <Card className={classes.column}>
@@ -82,17 +80,12 @@ function ColumnCard({ column }: { column: IColumn }) {
             </IconButton>
           </div>
         )}
+
+        <hr />
+
         {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
 
-        <ul>
-          {tasks.map((task) => (
-            <li key={task._id}>
-              <h4>{task.title}</h4>
-              <p>{task.description}</p>
-              <hr />
-            </li>
-          ))}
-        </ul>
+        {tasks && <ListTasks tasks={tasks} />}
       </CardContent>
 
       <CardActions className={classes.actions}>

@@ -1,0 +1,9 @@
+@use '../../base.scss';
+
+.list {
+  width: 100%;
+
+  .listitem {
+    margin-bottom: 0.15rem;
+  }
+}
