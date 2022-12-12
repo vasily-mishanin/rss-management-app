@@ -1,60 +1,159 @@
 import { Button } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
-import { getAllColumnsThunk } from '../../store/reducers/boardsSlice';
 import classes from './BoardPage.module.scss';
 import ModalWindow from '../../components/ModalWindow/ModalWindow';
 import FormBoardColumn from '../../components/FormBoardColumn/FormBoardColumn';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import ListColumns from '../../components/ListColumns/ListColumns';
-import { useEffect } from 'react';
+import { form_mode, form_subject } from '../../models/constants';
+import { FormDataTypes, INewColumn, INewTask, ITask } from '../../models/types';
+import { columnsApi } from '../../services/ColumnService';
+import Confirmation from '../../components/Confirmation/Confirmation';
+import { boardsApi } from '../../services/BoardsService';
+import FormNewTask from '../../components/FormNewTask/FormNewTask';
+import { tasksApi } from '../../services/TaskService';
 
 function BoardPage() {
-  const params = useParams();
+  const params = useParams<{ boardId: string }>();
   const dispatch = useAppDispatch();
-  const authState = useAppSelector((s) => s.authReducer);
-  const uiState = useAppSelector((s) => s.uiReducer);
-  const boardsState = useAppSelector((s) => s.boardsReducer);
-  const currentBoard = boardsState.boards.find((board) => board._id === params.boardId);
+  const uiSlice = useAppSelector((s) => s.uiReducer);
 
-  //FETCH ALL COLUMNS
-  useEffect(() => {
-    if (params.boardId && authState.isLoggedIn) {
-      const reqData = { token: authState.token, boardId: params.boardId };
-      dispatch(getAllColumnsThunk(reqData));
-    }
-  }, [authState, dispatch, params.boardId]);
+  const { data: currentBoard } = boardsApi.useGetBoardByIdQuery(params.boardId || '');
 
-  const handleAddColumn = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal(true));
+  //ReFETCH ALL COLUMNS
+  const {
+    data: fetchedColumns,
+    error,
+    isLoading,
+    isFetching,
+  } = columnsApi.useGetAllColumnsQuery(params.boardId || '');
+
+  const [addNewColumn, resultAddNewColumn] = columnsApi.useAddNewColumnMutation();
+  const [deleteColumn, resultDeleteColumn] = columnsApi.useDeleteColumnByIdMutation();
+
+  const [addNewTask, resultAddNewTask] = tasksApi.useAddNewTaskMutation();
+  const [deleteTask, resultDeleteTask] = tasksApi.useDeleteTaskByIdMutation();
+  const [updateTask, resultUpdateTask] = tasksApi.useUpdateTaskMutation();
+
+  const handleShowModal = () => {
+    dispatch(uiSliceActions.setShowNewSubjectModal(true));
   };
 
   const handleClose = () => {
-    dispatch(uiSliceActions.toggleNewBoardModal(false));
+    dispatch(uiSliceActions.setShowNewSubjectModal(false));
+    dispatch(uiSliceActions.setShowUpdateBoardModal(false));
+    dispatch(uiSliceActions.setShowConfirmDeleteColumnModal(false));
+    dispatch(uiSliceActions.toggleShowNewTaskModal(false));
+    dispatch(uiSliceActions.setShowConfirmDeleteTaskModal(false));
+    dispatch(uiSliceActions.toggleShowUpdateTaskModal(false));
+  };
+
+  function handleOnFormSubmit(data: FormDataTypes, mode: form_mode, subject: form_subject) {
+    if (subject === form_subject.COLUMN && mode === form_mode.ADD) {
+      addNewColumn(data as INewColumn);
+    }
+  }
+
+  const handleConfirmDeleteColumn = () => {
+    if (params.boardId) {
+      deleteColumn({ boardId: params.boardId, columnId: uiSlice.removingColumnId });
+    }
+    handleClose();
+  };
+
+  const handleConfirmDeleteTask = () => {
+    if (params.boardId) {
+      deleteTask({ boardId: params.boardId, columnId: params.boardId, taskId: uiSlice.removingTaskId });
+    }
+    handleClose();
+  };
+
+  const handleAddNewTask = (data: FormDataTypes) => {
+    addNewTask(data as INewTask);
+  };
+
+  const handleUpdateTask = (data: FormDataTypes) => {
+    updateTask(data as ITask);
   };
 
   return (
     <div className={classes.board}>
-      <h2>{currentBoard?.title}</h2>
+      <div className={classes.navigation}>
+        <Link to='/'>Boards/</Link>
+        <span>{currentBoard?.title}</span>
+      </div>
 
-      {uiState.showNewBoardModal && (
+      {uiSlice.showNewSubjectModal && (
         <ModalWindow onClose={handleClose}>
           <FormBoardColumn
-            onClose={handleClose}
+            mode={form_mode.ADD}
+            subject={form_subject.COLUMN}
             label='columnName'
             title='New Column Title'
             message='Enter column title in latin letters (3 or more)'
             description={undefined}
+            onClose={handleClose}
+            onFormSubmit={handleOnFormSubmit}
+          />
+        </ModalWindow>
+      )}
+
+      {uiSlice.showConfirmDeleteColumnModal && (
+        <ModalWindow onClose={handleClose}>
+          <Confirmation
+            questionText='Are you sure you want to delete this column?'
+            onCancel={handleClose}
+            onConfirm={handleConfirmDeleteColumn}
+          />
+        </ModalWindow>
+      )}
+
+      {uiSlice.showNewTaskModal && (
+        <ModalWindow onClose={handleClose}>
+          <FormNewTask
+            onClose={handleClose}
+            onFormSubmit={handleAddNewTask}
+            mode={form_mode.ADD}
+            subject={form_subject.TASK}
+          />
+        </ModalWindow>
+      )}
+
+      {uiSlice.showUpdateTaskModal && (
+        <ModalWindow onClose={handleClose}>
+          <FormNewTask
+            onClose={handleClose}
+            onFormSubmit={handleUpdateTask}
+            mode={form_mode.UPDATE}
+            subject={form_subject.TASK}
+          />
+        </ModalWindow>
+      )}
+
+      {uiSlice.showConfirmDeleteTaskModal && (
+        <ModalWindow onClose={handleClose}>
+          <Confirmation
+            questionText='Are you sure you want to delete this task?'
+            onCancel={handleClose}
+            onConfirm={handleConfirmDeleteTask}
           />
         </ModalWindow>
       )}
 
       <div className={classes.columns}>
-        <ListColumns columns={boardsState.columns} />
-        <Button className={classes.addBtn} variant='contained' color='success' onClick={handleAddColumn}>
+        {fetchedColumns && <ListColumns columns={fetchedColumns} />}
+
+        <Button className={classes.addBtn} variant='contained' color='success' onClick={handleShowModal}>
           ADD NEW COLUMN
         </Button>
       </div>
+      {isLoading && <p>Loading...</p>}
+      {resultDeleteColumn.isLoading && <p>Deleting Column...</p>}
+      {resultAddNewColumn.isLoading && <p>Adding Column...</p>}
+      {resultDeleteTask.isLoading && <p>Deleting Task...</p>}
+      {resultAddNewTask.isLoading && <p>Adding Task...</p>}
+      {resultUpdateTask.isLoading && <p>Updating Task...</p>}
     </div>
   );
 }

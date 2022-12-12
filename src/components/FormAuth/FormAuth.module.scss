@@ -5,6 +5,10 @@
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+  width: 20rem;
+  padding: 1rem;
+  box-shadow: base.$shadow-main;
+  border-radius: 0.2rem;
 }
 
 .authBtn {

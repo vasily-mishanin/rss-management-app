@@ -14,6 +14,8 @@ type InputProps = {
   message: string;
   error: FieldError | null;
   title?: string;
+  variant?: 'input' | 'textarea';
+  defaultValue?: string;
 };
 
 const InputBoards = ({
@@ -25,6 +27,8 @@ const InputBoards = ({
   error,
   message,
   title,
+  variant,
+  defaultValue,
 }: InputProps) => {
   return (
     <div className={classes.wrapper}>
@@ -32,15 +36,31 @@ const InputBoards = ({
         <legend>
           <label htmlFor={label}>{title ? title : label}</label>
         </legend>
-        <input
-          id={label}
-          type={type}
-          {...register(label, {
-            required: required,
-            pattern: { value: patternValue, message },
-          })}
-          placeholder={`Enter ${label.toLowerCase()}`}
-        />
+        {variant === 'textarea' ? (
+          <textarea
+            className={classes.textarea}
+            id={label}
+            rows={7}
+            cols={20}
+            {...register(label, {
+              required: required,
+              pattern: { value: patternValue, message },
+            })}
+            placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            defaultValue={defaultValue ? defaultValue : ''}
+          />
+        ) : (
+          <input
+            id={label}
+            type={type}
+            {...register(label, {
+              required: required,
+              pattern: { value: patternValue, message },
+            })}
+            placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            defaultValue={defaultValue ? defaultValue : ''}
+          />
+        )}
       </fieldset>
       <p className={classes.errorMessage}>{error ? message : ''}</p>
     </div>

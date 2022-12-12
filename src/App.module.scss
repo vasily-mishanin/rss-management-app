@@ -16,14 +16,11 @@
   }
 
   &__main {
-    //width: 100%;
+    width: 100%;
     flex-grow: 1;
     flex-shrink: 0;
     flex-basis: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: scroll;
   }
 
   &__footer {

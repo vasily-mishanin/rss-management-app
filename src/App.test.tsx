@@ -3,11 +3,11 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 import { BrowserRouter, MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { setupStore } from './store/store';
+import { store } from './store/store';
 
 test('renders App', () => {
   render(
-    <Provider store={setupStore()}>
+    <Provider store={store}>
       <App />
     </Provider>,
     { wrapper: BrowserRouter }

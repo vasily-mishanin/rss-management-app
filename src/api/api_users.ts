@@ -35,9 +35,7 @@ export async function logIn(user: IUser) {
       body: JSON.stringify({ login, password }),
     });
     if (res.ok) {
-      console.log('logIn Success');
       const data: ILogInSuccess = await res.json();
-      console.log('loggedIn', data);
       return data;
     } else {
       const error: IError = await res.json();
@@ -62,9 +60,7 @@ export async function updateUser(user: IUser) {
       body: JSON.stringify({ name, login, password }),
     });
     if (res.ok) {
-      console.log('Update Success');
       const data: IUpdatedUser = await res.json();
-      console.log('UpdatedUser', data);
       return data;
     } else {
       const error: IError = await res.json();
@@ -87,9 +83,7 @@ export async function deleteUser(userId: string, token: string) {
       },
     });
     if (res.ok) {
-      console.log('Delete Success');
       const data: IUpdatedUser = await res.json();
-      console.log('DeletedUser', data);
       return data;
     } else {
       const error: IError = await res.json();

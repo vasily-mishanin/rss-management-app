@@ -15,7 +15,7 @@ function Navigation() {
 
   const handleNewBoard = () => {
     navigate('/');
-    dispatch(uiSliceActions.toggleNewBoardModal(true));
+    dispatch(uiSliceActions.setShowNewSubjectModal(true));
   };
 
   const linkStyle = ({ isActive }: { isActive: boolean }) =>

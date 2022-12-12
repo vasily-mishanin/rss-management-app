@@ -1,5 +1,4 @@
 .board {
-  width: 100%;
   padding: 1rem;
 
   display: flex;
@@ -7,8 +6,12 @@
   flex-direction: column;
   align-self: flex-start;
 
+  .navigation {
+    font-size: 1.5rem;
+    display: flex;
+  }
+
   .columns {
-    overflow-x: scroll;
     display: flex;
     flex-direction: row;
     gap: 2rem;
@@ -18,4 +21,7 @@
       height: 1.5rem;
     }
   }
+
+  min-height: 50%;
+  max-height: 90%;
 }
