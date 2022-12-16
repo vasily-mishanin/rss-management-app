@@ -58,6 +58,8 @@ export interface INewColumn {
   order: number;
 }
 
+export type IUpdatedColumn = Pick<IColumn, '_id' | 'order'>;
+
 export interface ITask {
   _id: string;
   title: string;
@@ -70,6 +72,8 @@ export interface ITask {
 }
 
 export type INewTask = Omit<ITask, '_id'>;
+
+export type IUpdatedTask = Pick<ITask, '_id' | 'order' | 'columnId'>;
 
 export type TGetAllColumns = {
   token: string;

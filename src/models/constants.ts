@@ -5,6 +5,9 @@ export enum endpoints {
   BOARDS = 'boards',
   COLUMNS = 'columns',
   TASKS = 'tasks',
+  TASKS_SET = 'tasksSet',
+  COLUMNS_SET = 'columnsSet',
+  BOARDS_SET = 'boardsSet',
 }
 
 export enum methods {
@@ -12,6 +15,7 @@ export enum methods {
   POST = 'POST',
   PUT = 'PUT',
   DELETE = 'DELETE',
+  PATCH = 'PATCH',
 }
 
 export enum form_mode {
@@ -28,5 +32,4 @@ export enum form_subject {
 export const VALIDATE_name_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{3,}$/;
 export const VALIDATE_description_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{5,}$/;
 export const VALIDATE_passport_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{8,}$/;
-
 export const VALIDATE_login_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{3,}$/;

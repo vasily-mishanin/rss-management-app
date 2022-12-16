@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL, endpoints, methods } from '../models/constants';
-import { IColumn, ITask, INewTask } from '../models/types';
+import { IColumn, ITask, INewTask, IUpdatedTask } from '../models/types';
 import type { RootState } from '../store/store';
 
 export const tasksApi = createApi({
@@ -52,6 +52,17 @@ export const tasksApi = createApi({
           url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}/${endpoints.TASKS}/${taskId}`,
           method: methods.PUT,
           body: { columnId, title, order, description, userId, users },
+        };
+      },
+      invalidatesTags: ['Task'],
+    }),
+
+    updateSetOfTasks: builder.mutation<ITask[], IUpdatedTask[]>({
+      query: (updatedTasks) => {
+        return {
+          url: `/${endpoints.TASKS_SET}`,
+          method: methods.PATCH,
+          body: updatedTasks,
         };
       },
       invalidatesTags: ['Task'],

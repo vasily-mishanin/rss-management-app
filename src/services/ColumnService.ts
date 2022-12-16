@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL, endpoints, methods } from '../models/constants';
-import { IBoard, IColumn, INewColumn } from '../models/types';
+import { IBoard, IColumn, INewColumn, IUpdatedColumn } from '../models/types';
 import type { RootState } from '../store/store';
 
 export const columnsApi = createApi({
@@ -48,6 +48,17 @@ export const columnsApi = createApi({
           url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}`,
           method: methods.PUT,
           body: { title, order },
+        };
+      },
+      invalidatesTags: ['Column'],
+    }),
+
+    updateSetOfColumns: builder.mutation<IColumn[], IUpdatedColumn[]>({
+      query: (updatedColums) => {
+        return {
+          url: `/${endpoints.COLUMNS_SET}`,
+          method: methods.PATCH,
+          body: updatedColums,
         };
       },
       invalidatesTags: ['Column'],

@@ -2,8 +2,9 @@
 
 .list {
   width: 100%;
+  flex-grow: 1;
 
   .listitem {
-    margin-bottom: 0.15rem;
+    margin-bottom: 0.2rem;
   }
 }

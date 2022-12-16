@@ -9,6 +9,8 @@ import type { IUser } from './models/types';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { authSliceActions, isStoredTokenValid } from './store/reducers/authSlice';
 import { storeScroll } from './helpers/headerAnimation';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 // Update scroll position for first time
 storeScroll();
@@ -28,17 +30,19 @@ function App() {
   }, []);
 
   return (
-    <div className={classes.app}>
-      <header className={classes.app__header}>
-        <MainNavigation />
-      </header>
-      <main className={classes.app__main}>
-        <Outlet />
-      </main>
-      <footer className={classes.app__footer}>
-        <Footer />
-      </footer>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className={classes.app}>
+        <header className={classes.app__header}>
+          <MainNavigation />
+        </header>
+        <main className={classes.app__main}>
+          <Outlet />
+        </main>
+        <footer className={classes.app__footer}>
+          <Footer />
+        </footer>
+      </div>
+    </DndProvider>
   );
 }
 

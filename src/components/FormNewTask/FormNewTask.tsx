@@ -33,7 +33,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
   const navigate = useNavigate();
   const params = useParams();
   const uiSlice = useAppSelector((state) => state.uiReducer);
-
+  const tasksSlice = useAppSelector((state) => state.tasksApi);
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     //const [currentTask, setCurrentTask] = useState<ITask>({});
 

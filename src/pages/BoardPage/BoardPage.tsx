@@ -7,7 +7,7 @@ import FormBoardColumn from '../../components/FormBoardColumn/FormBoardColumn';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import ListColumns from '../../components/ListColumns/ListColumns';
 import { form_mode, form_subject } from '../../models/constants';
-import { FormDataTypes, INewColumn, INewTask, ITask } from '../../models/types';
+import { FormDataTypes, IColumn, INewColumn, INewTask, ITask, IUpdatedColumn } from '../../models/types';
 import { columnsApi } from '../../services/ColumnService';
 import Confirmation from '../../components/Confirmation/Confirmation';
 import { boardsApi } from '../../services/BoardsService';
@@ -35,6 +35,15 @@ function BoardPage() {
   const [addNewTask, resultAddNewTask] = tasksApi.useAddNewTaskMutation();
   const [deleteTask, resultDeleteTask] = tasksApi.useDeleteTaskByIdMutation();
   const [updateTask, resultUpdateTask] = tasksApi.useUpdateTaskMutation();
+  const [updateColumns, resultUpdateColumns] = columnsApi.useUpdateSetOfColumnsMutation();
+
+  const handleUpdateColumns = (updatedColumns: IColumn[]) => {
+    const dataForApi: IUpdatedColumn[] = updatedColumns.map((column) => ({
+      _id: column._id,
+      order: column.order,
+    }));
+    updateColumns(dataForApi);
+  };
 
   const handleShowModal = () => {
     dispatch(uiSliceActions.setShowNewSubjectModal(true));
@@ -142,7 +151,9 @@ function BoardPage() {
       )}
 
       <div className={classes.columns}>
-        {fetchedColumns && <ListColumns columns={fetchedColumns} />}
+        {fetchedColumns && (
+          <ListColumns columns={sortColumns(fetchedColumns)} updateColumns={handleUpdateColumns} />
+        )}
 
         <Button className={classes.addBtn} variant='contained' color='success' onClick={handleShowModal}>
           ADD NEW COLUMN
@@ -154,8 +165,24 @@ function BoardPage() {
       {resultDeleteTask.isLoading && <p>Deleting Task...</p>}
       {resultAddNewTask.isLoading && <p>Adding Task...</p>}
       {resultUpdateTask.isLoading && <p>Updating Task...</p>}
+      {resultUpdateColumns.isLoading && <p>Updating Columns...</p>}
     </div>
   );
 }
 
 export default BoardPage;
+
+const sortColumns = (columns: IColumn[]) => {
+  console.log('sortColumns');
+
+  if (columns.length > 0) {
+    let sortedColumns = [...columns].sort((a, b) => a.order - b.order);
+    // if new columns with order=0 added
+    if (sortedColumns[1] && sortedColumns[1].order === 0) {
+      sortedColumns[1] = { ...sortedColumns[1], order: sortedColumns.length - 1 };
+    }
+    sortedColumns = sortedColumns.sort((a, b) => a.order - b.order);
+    return sortedColumns;
+  }
+  return [];
+};

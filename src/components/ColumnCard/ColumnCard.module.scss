@@ -27,6 +27,10 @@
   }
 
   .content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+
     .titlebox {
       display: flex;
       justify-content: center;
