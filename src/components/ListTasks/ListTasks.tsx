@@ -1,89 +1,118 @@
 import classes from './ListTasks.module.scss';
 import { ITask } from '../../models/types';
 import TaskCard from '../TaskCard/TaskCard';
-import ListItem from '@mui/material/ListItem';
-import { useState, useCallback, useEffect } from 'react';
-import { useDrop } from 'react-dnd';
-import ItemTypes from '../../models/ItemTypes';
-import update from 'immutability-helper';
+import { useState, useEffect } from 'react';
+import {
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+  arrayMove,
+} from '@dnd-kit/sortable';
+import React from 'react';
 
 export interface ILiastTasksProps {
   tasks: ITask[];
-  updateTasks: (updatedTasks: ITask[]) => void;
+  updateTasksOnDatabase: (updatedTasks: ITask[]) => void;
 }
 
-function ListTasks({ tasks, updateTasks }: ILiastTasksProps) {
+function ListTasks({ tasks, updateTasksOnDatabase }: ILiastTasksProps) {
   const [currentTasks, setCurrentTasks] = useState<ITask[]>(tasks);
-  //console.log('ListTasks', currentTasks);
+  const [flag, setFlag] = useState(false);
 
-  const [{ isOver }, drop] = useDrop({
-    accept: ItemTypes.TASK,
-    drop: (item, monitor) => {
-      console.log(item);
-      updateTasks(currentTasks);
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      // Require the mouse to move by 10 pixels before activating
+      activationConstraint: {
+        distance: 10,
+      },
     }),
-  });
-
-  const moveTaskInside = useCallback((dragIndex: number, hoverIndex: number) => {
-    setCurrentTasks((prevTasks: ITask[]) => {
-      const newTasks = [
-        ...update(prevTasks, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, prevTasks[dragIndex] as ITask],
-          ],
-        }),
-      ];
-
-      const orderedTasks = newTasks.map((task, index) => {
-        const newTask = { ...task, order: index };
-        return newTask;
-      });
-      return orderedTasks;
-    });
-  }, []);
+    useSensor(TouchSensor, {
+      // Press delay of 250ms, with tolerance of 5px of movement
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     setCurrentTasks(tasks);
   }, [tasks]);
 
-  // useEffect(() => {
-  //   updateTasks(currentTasks);
-  // }, [currentTasks]);
+  useEffect(() => {
+    return () => console.log('UNMOUNTING');
+  }, []);
 
-  const sortTasks = () => {
-    if (currentTasks.length > 0) {
-      let sortedTasks = [...currentTasks].sort((a, b) => a.order - b.order);
-      if (sortedTasks[1] && sortedTasks[1].order === 0) {
-        sortedTasks[1] = { ...sortedTasks[1], order: sortedTasks.length - 1 };
-      }
-      sortedTasks = sortedTasks.sort((a, b) => a.order - b.order);
-      return sortedTasks;
+  useEffect(() => {
+    if (flag) {
+      console.log('useEffect', flag);
+      updateTasksOnDatabase(currentTasks);
+      setFlag(false);
     }
-    return;
-  };
+  }, [currentTasks, updateTasksOnDatabase]);
 
-  const sortedTasks = sortTasks();
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      setFlag(true);
+      setCurrentTasks((currentTasks) => {
+        const oldIndex = currentTasks.findIndex((task) => task._id === active.id);
+        const newIndex = currentTasks.findIndex((task) => task._id === over.id);
+        return arrayMove(currentTasks, oldIndex, newIndex);
+      });
+    }
+  }
+
+  console.log('currentTasks', currentTasks);
+  console.log('flag', flag);
 
   return (
-    <>
-      <ul
-        ref={drop}
-        className={classes.list}
-        style={isOver ? { boxShadow: '0 2px 10px 1px rgba(3, 3, 3, 0.2)' } : {}}
-      >
-        {sortedTasks &&
-          sortedTasks.map((task, ind) => (
-            <ListItem disablePadding key={task._id} className={classes.listitem}>
-              <TaskCard task={task} index={ind} moveTask={moveTaskInside} />
-            </ListItem>
-          ))}
+    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={closestCenter}>
+      <ul className={classes.list}>
+        <SortableContext
+          items={currentTasks.map((task) => ({ id: task._id }))}
+          strategy={verticalListSortingStrategy}
+        >
+          {currentTasks && currentTasks.map((task) => <TaskCard task={task} key={task._id} id={task._id} />)}
+        </SortableContext>
       </ul>
-    </>
+    </DndContext>
   );
 }
 
-export default ListTasks;
+function areEqual(prevProps: ILiastTasksProps, nextProps: ILiastTasksProps) {
+  const prevTasks = prevProps.tasks;
+  const nextTasks = nextProps.tasks;
+  if (nextTasks.length !== prevTasks.length) return false;
+  const prevIds = prevTasks.map((t) => t._id);
+  const nextIds = nextTasks.map((t) => t._id);
+  if (prevIds.join('') !== nextIds.join('')) return false;
+  const prevTitles = prevTasks.map((t) => t.title);
+  const nextTitles = nextTasks.map((t) => t.title);
+  if (prevTitles.join('') !== nextTitles.join('')) return false;
+  const prevDesc = prevTasks.map((t) => t.description);
+  const nextDesc = nextTasks.map((t) => t.description);
+  if (prevDesc.join('') !== nextDesc.join('')) return false;
+  return true;
+  /*
+  return true if passing nextProps to render would return
+  the same result as passing prevProps to render,
+  otherwise return false
+  */
+}
+
+export default React.memo(ListTasks, areEqual);
+//export default ListTasks;

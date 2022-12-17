@@ -1,7 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ITask } from '../../models/types';
+import { IColumn, ITask } from '../../models/types';
 
-const initialState = {
+interface IUISlice {
+  showNewSubjectModal: boolean;
+  showUpdateBoardModal: boolean;
+  showNewTaskModal: boolean;
+  showUpdateTaskModal: boolean;
+  showConfirmDeleteBoardModal: boolean;
+  showConfirmDeleteColumnModal: boolean;
+  showConfirmDeleteTaskModal: boolean;
+
+  removingBoardId: string;
+  updatingBoardId: string;
+
+  removingColumnId: string;
+  updatingColumnId: string;
+
+  removingTaskId: string;
+  updatingTaskId: string;
+
+  updatingTask: ITask;
+  updatingColumn: IColumn;
+}
+
+const initialState: IUISlice = {
   showNewSubjectModal: false,
   showUpdateBoardModal: false,
   showNewTaskModal: false,
@@ -19,7 +41,17 @@ const initialState = {
   removingTaskId: '',
   updatingTaskId: '',
 
-  //updatingTask: ITask,
+  updatingTask: {
+    _id: '',
+    boardId: '',
+    columnId: '',
+    title: '',
+    description: '',
+    userId: '',
+    order: 0,
+    users: [''],
+  },
+  updatingColumn: { _id: '', boardId: '', title: '', order: 0 },
 };
 
 const uiSlice = createSlice({
@@ -74,6 +106,12 @@ const uiSlice = createSlice({
 
     setUpdatingTaskId: (state, action: PayloadAction<string>) => {
       state.updatingTaskId = action.payload;
+    },
+    setUpdatingTask: (state, action: PayloadAction<ITask>) => {
+      state.updatingTask = action.payload;
+    },
+    setUpdatingColumn: (state, action: PayloadAction<IColumn>) => {
+      state.updatingColumn = action.payload;
     },
   },
 });

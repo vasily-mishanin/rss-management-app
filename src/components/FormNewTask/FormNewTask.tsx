@@ -1,9 +1,9 @@
 import classes from './FormNewTask.module.scss';
 import InputBoards from '../InputBoards/InputBoards';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../hooks/redux';
+import { useAppSelector } from '../../hooks/redux';
 import { Button } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { FormDataTypes, INewTask, ITask } from '../../models/types';
 import {
   form_mode,
@@ -11,7 +11,6 @@ import {
   VALIDATE_description_REGEXPR,
   VALIDATE_name_REGEXPR,
 } from '../../models/constants';
-import { tasksApi } from '../../services/TaskService';
 
 type Inputs = {
   taskName?: string;
@@ -29,20 +28,15 @@ export interface IFormProps {
 function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormProps) {
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const params = useParams();
   const uiSlice = useAppSelector((state) => state.uiReducer);
-  const tasksSlice = useAppSelector((state) => state.tasksApi);
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
-    //const [currentTask, setCurrentTask] = useState<ITask>({});
-
     if (params.boardId) {
       const taskData: INewTask | ITask = {
         boardId: params.boardId,
         columnId: uiSlice.updatingColumnId,
         title: inputsData.taskName || 'no name',
-        order: 0,
+        order: uiSlice.updatingTask.order || 0,
         description: inputsData.taskDescription || 'no description',
         userId: '0',
         users: [authState.user._id],
@@ -57,21 +51,6 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
     }
   };
 
-  // to fill form inputs with current data
-  let currentTask: ITask | null = null;
-
-  if (mode === form_mode.UPDATE && subject === form_subject.TASK) {
-    const boardId = params.boardId;
-    const columnId = uiSlice.updatingColumnId;
-    const taskId = uiSlice.updatingTaskId;
-    if (boardId && columnId && taskId) {
-      const { data } = tasksApi.useGetTaskByIdQuery({ boardId, columnId, taskId });
-      if (data) {
-        currentTask = data;
-      }
-    }
-  }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       <InputBoards
@@ -83,7 +62,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         patternValue={VALIDATE_name_REGEXPR}
         error={formState.errors.taskName || null}
         message='Enter task title (3 or more characters)'
-        defaultValue={currentTask ? currentTask.title : undefined}
+        defaultValue={uiSlice.updatingTask ? uiSlice.updatingTask.title : undefined}
       />
 
       <InputBoards
@@ -96,7 +75,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         error={formState.errors.taskDescription || null}
         message='Enter description (5 or more characters)'
         variant='textarea'
-        defaultValue={currentTask ? currentTask.description : undefined}
+        defaultValue={uiSlice.updatingTask ? uiSlice.updatingTask.description : undefined}
       />
 
       <div className={classes.actions}>

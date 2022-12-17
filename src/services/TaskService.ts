@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL, endpoints, methods } from '../models/constants';
-import { IColumn, ITask, INewTask, IUpdatedTask } from '../models/types';
+import { ITask, INewTask, IUpdatedTask } from '../models/types';
 import type { RootState } from '../store/store';
 
 export const tasksApi = createApi({
@@ -23,6 +23,10 @@ export const tasksApi = createApi({
         method: methods.GET,
       }),
       providesTags: (result) => ['Task'],
+      // providesTags: (result, error, arg) =>
+      //   result
+      //     ? [...result.map(({ columnId }) => ({ type: 'Task' as const, id: columnId })), 'Task']
+      //     : ['Task'],
     }),
 
     getTaskById: builder.query<ITask, { boardId: string; columnId: string; taskId: string }>({

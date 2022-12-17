@@ -177,11 +177,11 @@ const sortColumns = (columns: IColumn[]) => {
 
   if (columns.length > 0) {
     let sortedColumns = [...columns].sort((a, b) => a.order - b.order);
-    // if new columns with order=0 added
-    if (sortedColumns[1] && sortedColumns[1].order === 0) {
-      sortedColumns[1] = { ...sortedColumns[1], order: sortedColumns.length - 1 };
-    }
-    sortedColumns = sortedColumns.sort((a, b) => a.order - b.order);
+    // // if new columns with order=0 added
+    // if (sortedColumns[1] && sortedColumns[1].order === 0) {
+    //   sortedColumns[1] = { ...sortedColumns[1], order: sortedColumns.length - 1 };
+    // }
+    // sortedColumns = sortedColumns.sort((a, b) => a.order - b.order);
     return sortedColumns;
   }
   return [];

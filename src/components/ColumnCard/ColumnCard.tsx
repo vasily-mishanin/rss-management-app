@@ -10,28 +10,18 @@ import type { IColumn, ITask, IUpdatedTask } from '../../models/types';
 import { useAppDispatch } from '../../hooks/redux';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useParams } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 import FormColumnEdit from '../FormColumnEdit/FormColumnEdit';
 import ListTasks from '../ListTasks/ListTasks';
 import { tasksApi } from '../../services/TaskService';
 import { CircularProgress } from '@mui/material';
-import { useDrag, useDrop } from 'react-dnd';
-import type { Identifier, XYCoord } from 'dnd-core';
-import ItemTypes from '../../models/ItemTypes';
 
 export interface IColumnCardProps {
   column: IColumn;
   index: number;
-  moveColumn: (dragIndex: number, hoverIndex: number) => void;
 }
 
-interface DragItem {
-  index: number;
-  column: IColumn;
-  type: string;
-}
-
-function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
+function ColumnCard({ column, index }: IColumnCardProps) {
   const [formMode, setFormMode] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -44,79 +34,6 @@ function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
 
   const [updateSetOfTasks, resultUpdateSetOfTasks] = tasksApi.useUpdateSetOfTasksMutation();
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [{ isDragging }, dragRef] = useDrag(() => ({
-    type: ItemTypes.COLUMN,
-    item: () => ({ column, index }),
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
-
-  const [{ handlerId, isOver }, dropRef] = useDrop<
-    DragItem,
-    void,
-    { handlerId: Identifier | null; isOver: boolean }
-  >({
-    accept: ItemTypes.COLUMN,
-    drop: (item, monitor) => {
-      console.log(item);
-    },
-    collect: (monitor) => ({ handlerId: monitor.getHandlerId(), isOver: !!monitor.isOver() }),
-    hover(item: DragItem, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      let dragIndex = item.index; // which is moving
-      let hoverIndex = index; // over wich card
-
-      console.log('item', item, hoverIndex);
-
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-      // Get HORIZONTAL middle
-      const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the left
-      const hoverClientX = (clientOffset as XYCoord).x - hoverBoundingRect.left;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging left, only move when the cursor is left 50%
-      // When dragging right, only move when the cursor is right 50%
-
-      // Dragging right
-      if (dragIndex < hoverIndex && hoverClientX < hoverMiddleX) {
-        return;
-      }
-
-      // Dragging left
-      if (dragIndex > hoverIndex && hoverClientX > hoverMiddleX) {
-        return;
-      }
-
-      // Time to actually perform the action
-      //alert(`Now moveColumn dragIndex ${dragIndex}, hoverIndex ${hoverIndex}`);
-      moveColumn(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      // item.index = hoverIndex;
-      // hoverIndex = item.index;
-      [item.index, hoverIndex] = [hoverIndex, item.index];
-    },
-  });
-
   const onAddTask = () => {
     dispatch(uiSliceActions.toggleShowNewTaskModal(true));
     dispatch(uiSliceActions.setUpdatingColumnId(column._id));
@@ -128,8 +45,8 @@ function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
   };
 
   const handleEditColumn = () => {
-    ('handleEditColumn');
     dispatch(uiSliceActions.setUpdatingColumnId(column._id));
+    dispatch(uiSliceActions.setUpdatingColumn(column));
     if (params.boardId) {
       dispatch(uiSliceActions.setUpdatingBoardId(params.boardId));
     }
@@ -140,24 +57,28 @@ function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
     setFormMode(false);
   };
 
-  const handleUpdateTasks = (updatedTasks: ITask[]) => {
-    const tasksDataForApi: IUpdatedTask[] = updatedTasks.map((task) => ({
-      _id: task._id,
-      order: task.order,
-      columnId: task.columnId,
-    }));
+  const handleUpdateTasksOnDatabase = useCallback(
+    (updatedTasks: ITask[]) => {
+      const tasksDataForApi: IUpdatedTask[] = updatedTasks.map((task, index) => ({
+        _id: task._id,
+        order: index,
+        columnId: task.columnId,
+      }));
 
-    updateSetOfTasks(tasksDataForApi);
-  };
+      console.log('handleUpdateTasksOnDatabase', tasksDataForApi);
 
-  dragRef(dropRef(ref));
+      updateSetOfTasks(tasksDataForApi);
+    },
+    [updateSetOfTasks]
+  );
+
+  console.log('fetchedTasks', fetchedTasks);
+
+  const sortedTasks = sortTasks(fetchedTasks);
+  console.log('sortedTasks', sortedTasks);
 
   return (
-    <Card
-      ref={ref}
-      className={classes.column}
-      style={isOver ? { boxShadow: '0 6px 10px 3px rgba(3, 3, 3, 0.2)' } : {}}
-    >
+    <Card className={classes.column}>
       <CardContent className={classes.content}>
         {!formMode && (
           <div className={classes.titlebox}>
@@ -182,11 +103,10 @@ function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
           </div>
         )}
 
+        {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
         <hr />
 
-        {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
-
-        {fetchedTasks && <ListTasks tasks={fetchedTasks} updateTasks={handleUpdateTasks} />}
+        {sortedTasks && <ListTasks tasks={sortedTasks} updateTasksOnDatabase={handleUpdateTasksOnDatabase} />}
       </CardContent>
 
       <CardActions className={classes.actions}>
@@ -205,3 +125,16 @@ function ColumnCard({ column, index, moveColumn }: IColumnCardProps) {
 }
 
 export default ColumnCard;
+
+function sortTasks(tasks: ITask[] | undefined) {
+  if (tasks && tasks.length > 0) {
+    let sortedTasks = [...tasks].sort((a, b) => a.order - b.order);
+    //console.log('sortedTasks', sortedTasks)
+    if (sortedTasks[1] && sortedTasks[1].order === 0) {
+      sortedTasks[1] = { ...sortedTasks[1], order: 100 };
+    }
+    sortedTasks = sortedTasks.sort((a, b) => a.order - b.order);
+    return sortedTasks;
+  }
+  return [];
+}
