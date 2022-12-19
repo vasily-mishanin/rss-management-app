@@ -13,23 +13,20 @@ import { useDispatch } from 'react-redux';
 import { ITask } from '../../models/types';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { DndContext, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 
 export interface ITaskCardProps {
   task: ITask;
   id: string;
 }
 
-interface DragItem {
-  index: number;
-  task: ITask;
-  type: string;
-}
-
 function TaskCard({ task }: ITaskCardProps) {
   const dispatch = useDispatch();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: task._id,
+    data: {
+      type: 'task',
+      task: task,
+    },
   });
 
   const showDeleteTaskModal = (e: React.MouseEvent<HTMLElement>) => {

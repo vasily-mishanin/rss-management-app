@@ -13,6 +13,7 @@ import Confirmation from '../../components/Confirmation/Confirmation';
 import { boardsApi } from '../../services/BoardsService';
 import FormNewTask from '../../components/FormNewTask/FormNewTask';
 import { tasksApi } from '../../services/TaskService';
+import { DndContext, DragEndEvent, DragOverEvent } from '@dnd-kit/core';
 
 function BoardPage() {
   const params = useParams<{ boardId: string }>();
@@ -37,11 +38,13 @@ function BoardPage() {
   const [updateTask, resultUpdateTask] = tasksApi.useUpdateTaskMutation();
   const [updateColumns, resultUpdateColumns] = columnsApi.useUpdateSetOfColumnsMutation();
 
-  const handleUpdateColumns = (updatedColumns: IColumn[]) => {
-    const dataForApi: IUpdatedColumn[] = updatedColumns.map((column) => ({
+  const handleUpdateColumnsinDatabase = (updatedColumns: IColumn[]) => {
+    const dataForApi: IUpdatedColumn[] = updatedColumns.map((column, index) => ({
       _id: column._id,
-      order: column.order,
+      order: index,
     }));
+    console.log('handleUpdateColumnsinDatabase', dataForApi);
+
     updateColumns(dataForApi);
   };
 
@@ -85,6 +88,23 @@ function BoardPage() {
   const handleUpdateTask = (data: FormDataTypes) => {
     updateTask(data as ITask);
   };
+
+  // const handleDragOver = (event: DragOverEvent) => {
+  //   console.log('---------------------handleDragOver');
+  //   const { active, over } = event;
+
+  //   if (
+  //     over &&
+  //     over.data.current &&
+  //     active.data.current &&
+  //     over.data.current.accepts.includes(active.data.current.type)
+  //   ) {
+  //     // do stuff
+  //     console.log('-------// do stuff--------------handleDragOver');
+  //   }
+  // };
+
+  console.log('fetchedColumns', fetchedColumns);
 
   return (
     <div className={classes.board}>
@@ -152,13 +172,17 @@ function BoardPage() {
 
       <div className={classes.columns}>
         {fetchedColumns && (
-          <ListColumns columns={sortColumns(fetchedColumns)} updateColumns={handleUpdateColumns} />
+          <ListColumns
+            columns={sortColumns(fetchedColumns)}
+            updateColumnsOnDatabase={handleUpdateColumnsinDatabase}
+          />
         )}
 
         <Button className={classes.addBtn} variant='contained' color='success' onClick={handleShowModal}>
           ADD NEW COLUMN
         </Button>
       </div>
+
       {isLoading && <p>Loading...</p>}
       {resultDeleteColumn.isLoading && <p>Deleting Column...</p>}
       {resultAddNewColumn.isLoading && <p>Adding Column...</p>}
@@ -173,8 +197,6 @@ function BoardPage() {
 export default BoardPage;
 
 const sortColumns = (columns: IColumn[]) => {
-  console.log('sortColumns');
-
   if (columns.length > 0) {
     let sortedColumns = [...columns].sort((a, b) => a.order - b.order);
     // // if new columns with order=0 added
@@ -182,6 +204,8 @@ const sortColumns = (columns: IColumn[]) => {
     //   sortedColumns[1] = { ...sortedColumns[1], order: sortedColumns.length - 1 };
     // }
     // sortedColumns = sortedColumns.sort((a, b) => a.order - b.order);
+    console.log('sortColumns', sortedColumns);
+
     return sortedColumns;
   }
   return [];

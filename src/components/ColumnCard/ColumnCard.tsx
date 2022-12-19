@@ -15,6 +15,8 @@ import FormColumnEdit from '../FormColumnEdit/FormColumnEdit';
 import ListTasks from '../ListTasks/ListTasks';
 import { tasksApi } from '../../services/TaskService';
 import { CircularProgress } from '@mui/material';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 export interface IColumnCardProps {
   column: IColumn;
@@ -23,6 +25,9 @@ export interface IColumnCardProps {
 
 function ColumnCard({ column, index }: IColumnCardProps) {
   const [formMode, setFormMode] = useState(false);
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: column._id,
+  });
 
   const dispatch = useAppDispatch();
   const params = useParams();
@@ -65,62 +70,73 @@ function ColumnCard({ column, index }: IColumnCardProps) {
         columnId: task.columnId,
       }));
 
-      console.log('handleUpdateTasksOnDatabase', tasksDataForApi);
-
       updateSetOfTasks(tasksDataForApi);
     },
     [updateSetOfTasks]
   );
 
-  console.log('fetchedTasks', fetchedTasks);
+  //console.log('fetchedTasks', fetchedTasks);
 
   const sortedTasks = sortTasks(fetchedTasks);
-  console.log('sortedTasks', sortedTasks);
+  //console.log('sortedTasks', sortedTasks);
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   return (
-    <Card className={classes.column}>
-      <CardContent className={classes.content}>
-        {!formMode && (
-          <div className={classes.titlebox}>
-            <Typography
-              className={classes.title}
-              sx={{ fontSize: '1rem' }}
-              color='text.secondary'
-              onClick={handleEditColumn}
-            >
-              {column.title}
-            </Typography>
+    <li style={style} {...attributes} {...listeners} ref={setNodeRef}>
+      <Card className={classes.column}>
+        <CardContent className={classes.content}>
+          {!formMode && (
+            <div className={classes.titlebox}>
+              <Typography
+                className={classes.title}
+                sx={{ fontSize: '1rem' }}
+                color='text.secondary'
+                onClick={handleEditColumn}
+              >
+                {column.title}
+              </Typography>
 
-            <IconButton
-              className={classes.editIcon}
-              color='primary'
-              size='small'
-              aria-label='pending state icon'
-              onClick={handleEditColumn}
-            >
-              <EditIcon fontSize='small' />
-            </IconButton>
-          </div>
-        )}
+              <IconButton
+                className={classes.editIcon}
+                color='primary'
+                size='small'
+                aria-label='pending state icon'
+                onClick={handleEditColumn}
+              >
+                <EditIcon fontSize='small' />
+              </IconButton>
+            </div>
+          )}
 
-        {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
-        <hr />
+          {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
+          <hr />
 
-        {sortedTasks && <ListTasks tasks={sortedTasks} updateTasksOnDatabase={handleUpdateTasksOnDatabase} />}
-      </CardContent>
+          {sortedTasks && (
+            <ListTasks
+              tasks={sortedTasks}
+              columnId={column._id}
+              updateTasksOnDatabase={handleUpdateTasksOnDatabase}
+            />
+          )}
+        </CardContent>
 
-      <CardActions className={classes.actions}>
-        <Button size='small' color='error' onClick={handleDeleteColumn}>
-          DELETE
-        </Button>
+        <CardActions className={classes.actions}>
+          <Button size='small' color='error' onClick={handleDeleteColumn}>
+            DELETE
+          </Button>
 
-        {resultUpdateSetOfTasks.isLoading && <CircularProgress size='1rem' />}
+          {resultUpdateSetOfTasks.isLoading && <CircularProgress size='1rem' />}
 
-        <Button size='small' onClick={onAddTask}>
-          ADD NEW TASK
-        </Button>
-      </CardActions>
-    </Card>
+          <Button size='small' onClick={onAddTask}>
+            ADD NEW TASK
+          </Button>
+        </CardActions>
+      </Card>
+    </li>
   );
 }
 

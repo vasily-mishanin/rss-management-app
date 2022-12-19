@@ -11,6 +11,9 @@ import {
   useSensors,
   closestCenter,
   DragEndEvent,
+  useDroppable,
+  DragOverlay,
+  DragOverEvent,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -20,14 +23,22 @@ import {
 } from '@dnd-kit/sortable';
 import React from 'react';
 
-export interface ILiastTasksProps {
+export interface IListTasksProps {
+  columnId: string;
   tasks: ITask[];
   updateTasksOnDatabase: (updatedTasks: ITask[]) => void;
 }
 
-function ListTasks({ tasks, updateTasksOnDatabase }: ILiastTasksProps) {
+function ListTasks({ tasks, updateTasksOnDatabase, columnId }: IListTasksProps) {
   const [currentTasks, setCurrentTasks] = useState<ITask[]>(tasks);
   const [flag, setFlag] = useState(false);
+
+  // const { setNodeRef } = useDroppable({
+  //   id: columnId,
+  //   data: {
+  //     accepts: ['task'],
+  //   },
+  // });
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -53,12 +64,7 @@ function ListTasks({ tasks, updateTasksOnDatabase }: ILiastTasksProps) {
   }, [tasks]);
 
   useEffect(() => {
-    return () => console.log('UNMOUNTING');
-  }, []);
-
-  useEffect(() => {
     if (flag) {
-      console.log('useEffect', flag);
       updateTasksOnDatabase(currentTasks);
       setFlag(false);
     }
@@ -76,13 +82,21 @@ function ListTasks({ tasks, updateTasksOnDatabase }: ILiastTasksProps) {
     }
   }
 
-  console.log('currentTasks', currentTasks);
-  console.log('flag', flag);
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    console.log('----------TASK-----------handleDragOver', active, over);
+  };
 
   return (
-    <DndContext onDragEnd={handleDragEnd} sensors={sensors} collisionDetection={closestCenter}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      //onDragOver={handleDragOver}
+      sensors={sensors}
+      collisionDetection={closestCenter}
+    >
       <ul className={classes.list}>
         <SortableContext
+          id={columnId}
           items={currentTasks.map((task) => ({ id: task._id }))}
           strategy={verticalListSortingStrategy}
         >
@@ -93,7 +107,7 @@ function ListTasks({ tasks, updateTasksOnDatabase }: ILiastTasksProps) {
   );
 }
 
-function areEqual(prevProps: ILiastTasksProps, nextProps: ILiastTasksProps) {
+function areEqual(prevProps: IListTasksProps, nextProps: IListTasksProps) {
   const prevTasks = prevProps.tasks;
   const nextTasks = nextProps.tasks;
   if (nextTasks.length !== prevTasks.length) return false;
@@ -106,6 +120,9 @@ function areEqual(prevProps: ILiastTasksProps, nextProps: ILiastTasksProps) {
   const prevDesc = prevTasks.map((t) => t.description);
   const nextDesc = nextTasks.map((t) => t.description);
   if (prevDesc.join('') !== nextDesc.join('')) return false;
+  const prevColumnId = prevTasks.map((t) => t.columnId);
+  const nextColumnId = nextTasks.map((t) => t.columnId);
+  if (prevColumnId.join('') !== nextColumnId.join('')) return false;
   return true;
   /*
   return true if passing nextProps to render would return
