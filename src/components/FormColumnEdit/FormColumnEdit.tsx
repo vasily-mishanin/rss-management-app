@@ -42,7 +42,7 @@ function FormColumnEdit({ onClose, fieldValue }: FormColumnEditProps) {
     const updatedColumn: IColumn = {
       _id: uiSlice.updatingColumnId,
       title: columnTitle,
-      order: 0,
+      order: uiSlice.updatingColumn.order ? uiSlice.updatingColumn.order : 0,
       boardId: uiSlice.updatingBoardId,
     };
     await updateColumn(updatedColumn);

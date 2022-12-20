@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { baseURL, endpoints, methods } from '../models/constants';
-import { IColumn, ITask, INewTask, IUpdatedTask } from '../models/types';
+import { ITask, INewTask, IUpdatedTask } from '../models/types';
 import type { RootState } from '../store/store';
 
 export const tasksApi = createApi({
@@ -17,12 +17,24 @@ export const tasksApi = createApi({
   }),
   tagTypes: ['Task'],
   endpoints: (builder) => ({
+    getAllTasksInBoard: builder.query<ITask[], { boardId: string }>({
+      query: ({ boardId }) => ({
+        url: `/${endpoints.TASKS_SET}/${boardId}`,
+        method: methods.GET,
+      }),
+      providesTags: (result) => ['Task'],
+    }),
+
     getAllTasksInColumn: builder.query<ITask[], { boardId: string; columnId: string }>({
       query: ({ boardId, columnId }) => ({
         url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}/${endpoints.TASKS}`,
         method: methods.GET,
       }),
       providesTags: (result) => ['Task'],
+      // providesTags: (result, error, arg) =>
+      //   result
+      //     ? [...result.map(({ columnId }) => ({ type: 'Task' as const, id: columnId })), 'Task']
+      //     : ['Task'],
     }),
 
     getTaskById: builder.query<ITask, { boardId: string; columnId: string; taskId: string }>({
