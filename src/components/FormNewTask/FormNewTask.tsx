@@ -11,6 +11,8 @@ import {
   VALIDATE_description_REGEXPR,
   VALIDATE_name_REGEXPR,
 } from '../../models/constants';
+import { uiSliceActions } from '../../store/reducers/uiSlice';
+import { useDispatch } from 'react-redux';
 
 type Inputs = {
   taskName?: string;
@@ -29,6 +31,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
   const params = useParams();
+  const dispatch = useDispatch();
   const uiSlice = useAppSelector((state) => state.uiReducer);
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     if (params.boardId) {
@@ -43,6 +46,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         ...(mode === form_mode.UPDATE && { _id: uiSlice.updatingTaskId }),
       };
       onFormSubmit(taskData);
+      dispatch(uiSliceActions.resetUpdatingTask());
       onClose();
     }
 

@@ -23,6 +23,19 @@ interface IUISlice {
   updatingColumn: IColumn;
 }
 
+const initialTask = {
+  _id: '',
+  boardId: '',
+  columnId: '',
+  title: '',
+  description: '',
+  userId: '',
+  order: 0,
+  users: [''],
+};
+
+const initialColumn = { _id: '', boardId: '', title: '', order: 0 };
+
 const initialState: IUISlice = {
   showNewSubjectModal: false,
   showUpdateBoardModal: false,
@@ -41,17 +54,8 @@ const initialState: IUISlice = {
   removingTaskId: '',
   updatingTaskId: '',
 
-  updatingTask: {
-    _id: '',
-    boardId: '',
-    columnId: '',
-    title: '',
-    description: '',
-    userId: '',
-    order: 0,
-    users: [''],
-  },
-  updatingColumn: { _id: '', boardId: '', title: '', order: 0 },
+  updatingTask: initialTask,
+  updatingColumn: initialColumn,
 };
 
 const uiSlice = createSlice({
@@ -112,6 +116,14 @@ const uiSlice = createSlice({
     },
     setUpdatingColumn: (state, action: PayloadAction<IColumn>) => {
       state.updatingColumn = action.payload;
+    },
+    resetUpdatingTask: (state) => {
+      state.updatingTask = initialTask;
+      state.updatingTaskId = '';
+    },
+    resetUpdatingColumn: (state) => {
+      state.updatingColumn = initialColumn;
+      state.updatingColumnId = '';
     },
   },
 });

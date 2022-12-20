@@ -87,3 +87,8 @@ export type TGetAllTasks = {
 };
 
 export type FormDataTypes = INewBoard | IBoard | INewColumn | IColumn | INewTask | ITask;
+
+export interface IKanbanColumn {
+  column: IColumn;
+  tasks: ITask[];
+}

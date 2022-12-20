@@ -17,6 +17,14 @@ export const tasksApi = createApi({
   }),
   tagTypes: ['Task'],
   endpoints: (builder) => ({
+    getAllTasksInBoard: builder.query<ITask[], { boardId: string }>({
+      query: ({ boardId }) => ({
+        url: `/${endpoints.TASKS_SET}/${boardId}`,
+        method: methods.GET,
+      }),
+      providesTags: (result) => ['Task'],
+    }),
+
     getAllTasksInColumn: builder.query<ITask[], { boardId: string; columnId: string }>({
       query: ({ boardId, columnId }) => ({
         url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}/${endpoints.TASKS}`,

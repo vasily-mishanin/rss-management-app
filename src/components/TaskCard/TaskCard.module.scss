@@ -1,6 +1,5 @@
 .taskcard {
   width: 100%;
-  z-index: 100;
 
   display: flex;
   align-items: center;
@@ -23,5 +22,7 @@
 }
 
 .listitem {
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
+  left: auto !important;
+  top: auto !important;
 }

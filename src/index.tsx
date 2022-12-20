@@ -10,7 +10,6 @@ import AuthPage from './pages/AuthPage/AuthPage';
 import WelcomePage from './pages/WelcomePage/WelcomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
-//import * as api_boards from './api/api_boards';
 import BoardPage from './pages/BoardPage/BoardPage';
 
 const ROUTES = [
@@ -33,11 +32,9 @@ const router = createHashRouter(ROUTES);
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <RouterProvider router={router} />
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

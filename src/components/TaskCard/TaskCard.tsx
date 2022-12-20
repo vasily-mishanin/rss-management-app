@@ -1,5 +1,5 @@
 import classes from './TaskCard.module.scss';
-import React, { useRef } from 'react';
+import React from 'react';
 
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,23 +11,18 @@ import CloseIcon from '@mui/icons-material/Close';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useDispatch } from 'react-redux';
 import { ITask } from '../../models/types';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { Draggable } from 'react-beautiful-dnd';
+import ItemTypes from '../../models/ItemTypes';
+//////
 
 export interface ITaskCardProps {
   task: ITask;
-  id: string;
+  //id: string;
+  index: number;
 }
 
-function TaskCard({ task }: ITaskCardProps) {
+function TaskCard({ task, index }: ITaskCardProps) {
   const dispatch = useDispatch();
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: task._id,
-    data: {
-      type: 'task',
-      task: task,
-    },
-  });
 
   const showDeleteTaskModal = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();
@@ -43,38 +38,37 @@ function TaskCard({ task }: ITaskCardProps) {
     dispatch(uiSliceActions.setUpdatingTask(task));
   };
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
   return (
-    <ListItem
-      disablePadding
-      className={classes.listitem}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-    >
-      <Card className={classes.taskcard} onClick={handleTaskClick}>
-        <ListItemIcon className={classes.listicon}>
-          <DragIcon fontSize='small' />
-        </ListItemIcon>
-
-        <ListItemText primary={task.title} />
-
-        <IconButton
-          className={classes.closeicon}
-          color='secondary'
-          size='small'
-          aria-label='close edit form'
-          onClick={showDeleteTaskModal}
-        >
-          <CloseIcon fontSize='small' />
-        </IconButton>
-      </Card>
-    </ListItem>
+    <Draggable draggableId={task._id} index={index}>
+      {(provided, snapshot) => {
+        return (
+          <li
+            //  disablePadding
+            className={classes.listitem}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+            key={task._id}
+          >
+            <Card className={classes.taskcard} onClick={handleTaskClick}>
+              <ListItemIcon className={classes.listicon}>
+                <DragIcon fontSize='small' />
+              </ListItemIcon>
+              <ListItemText primary={task.title} />
+              <IconButton
+                className={classes.closeicon}
+                color='secondary'
+                size='small'
+                aria-label='close edit form'
+                onClick={showDeleteTaskModal}
+              >
+                <CloseIcon fontSize='small' />
+              </IconButton>
+            </Card>
+          </li>
+        );
+      }}
+    </Draggable>
   );
 }
 

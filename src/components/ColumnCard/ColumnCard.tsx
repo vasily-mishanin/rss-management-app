@@ -6,38 +6,35 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
+import DragIcon from '@mui/icons-material/DragIndicatorSharp';
 import type { IColumn, ITask, IUpdatedTask } from '../../models/types';
 import { useAppDispatch } from '../../hooks/redux';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useParams } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import FormColumnEdit from '../FormColumnEdit/FormColumnEdit';
 import ListTasks from '../ListTasks/ListTasks';
-import { tasksApi } from '../../services/TaskService';
 import { CircularProgress } from '@mui/material';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import TaskCard from '../TaskCard/TaskCard';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 export interface IColumnCardProps {
   column: IColumn;
+  tasks: ITask[];
   index: number;
 }
 
-function ColumnCard({ column, index }: IColumnCardProps) {
+function ColumnCard({ column, index, tasks }: IColumnCardProps) {
   const [formMode, setFormMode] = useState(false);
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: column._id,
-  });
+  const [currentTasks, setCurrentTasks] = useState<ITask[]>(tasks);
+  const [flag, setFlag] = useState(false);
+
+  useEffect(() => {
+    setCurrentTasks(tasks);
+  }, [tasks]);
 
   const dispatch = useAppDispatch();
   const params = useParams();
-
-  const { data: fetchedTasks } = tasksApi.useGetAllTasksInColumnQuery({
-    boardId: params.boardId || '',
-    columnId: column._id,
-  });
-
-  const [updateSetOfTasks, resultUpdateSetOfTasks] = tasksApi.useUpdateSetOfTasksMutation();
 
   const onAddTask = () => {
     dispatch(uiSliceActions.toggleShowNewTaskModal(true));
@@ -62,95 +59,64 @@ function ColumnCard({ column, index }: IColumnCardProps) {
     setFormMode(false);
   };
 
-  const handleUpdateTasksOnDatabase = useCallback(
-    (updatedTasks: ITask[]) => {
-      const tasksDataForApi: IUpdatedTask[] = updatedTasks.map((task, index) => ({
-        _id: task._id,
-        order: index,
-        columnId: task.columnId,
-      }));
-
-      updateSetOfTasks(tasksDataForApi);
-    },
-    [updateSetOfTasks]
-  );
-
-  //console.log('fetchedTasks', fetchedTasks);
-
-  const sortedTasks = sortTasks(fetchedTasks);
-  //console.log('sortedTasks', sortedTasks);
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+  //const sortedTasks = sortTasks(currentTasks);
 
   return (
-    <li style={style} {...attributes} {...listeners} ref={setNodeRef}>
-      <Card className={classes.column}>
-        <CardContent className={classes.content}>
-          {!formMode && (
-            <div className={classes.titlebox}>
-              <Typography
-                className={classes.title}
-                sx={{ fontSize: '1rem' }}
-                color='text.secondary'
-                onClick={handleEditColumn}
-              >
-                {column.title}
-              </Typography>
+    <Draggable draggableId={column._id} index={index} key={column._id}>
+      {(provided) => (
+        <li {...provided.draggableProps} ref={provided.innerRef} {...provided.dragHandleProps}>
+          <Card className={classes.column}>
+            <CardContent className={classes.content}>
+              {!formMode && (
+                <div className={classes.titlebox}>
+                  <Typography
+                    className={classes.title}
+                    sx={{ fontSize: '1rem' }}
+                    color='text.secondary'
+                    onClick={handleEditColumn}
+                  >
+                    {column.title}
+                  </Typography>
 
-              <IconButton
-                className={classes.editIcon}
-                color='primary'
-                size='small'
-                aria-label='pending state icon'
-                onClick={handleEditColumn}
-              >
-                <EditIcon fontSize='small' />
-              </IconButton>
-            </div>
-          )}
+                  <IconButton
+                    className={classes.editIcon}
+                    color='primary'
+                    size='small'
+                    aria-label='pending state icon'
+                    onClick={handleEditColumn}
+                  >
+                    <EditIcon fontSize='small' />
+                  </IconButton>
+                </div>
+              )}
 
-          {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
-          <hr />
+              {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
 
-          {sortedTasks && (
-            <ListTasks
-              tasks={sortedTasks}
-              columnId={column._id}
-              updateTasksOnDatabase={handleUpdateTasksOnDatabase}
-            />
-          )}
-        </CardContent>
+              <hr />
 
-        <CardActions className={classes.actions}>
-          <Button size='small' color='error' onClick={handleDeleteColumn}>
-            DELETE
-          </Button>
+              {currentTasks && (
+                <ListTasks columnId={column._id}>
+                  {currentTasks.map((task, index) => (
+                    <TaskCard task={task} key={task._id} index={index} />
+                  ))}
+                </ListTasks>
+              )}
+            </CardContent>
 
-          {resultUpdateSetOfTasks.isLoading && <CircularProgress size='1rem' />}
+            <CardActions className={classes.actions}>
+              <Button size='small' color='error' onClick={handleDeleteColumn}>
+                DELETE
+              </Button>
 
-          <Button size='small' onClick={onAddTask}>
-            ADD NEW TASK
-          </Button>
-        </CardActions>
-      </Card>
-    </li>
+              <Button size='small' onClick={onAddTask}>
+                ADD NEW TASK
+              </Button>
+            </CardActions>
+          </Card>
+        </li>
+      )}
+    </Draggable>
   );
 }
 
 export default ColumnCard;
-
-function sortTasks(tasks: ITask[] | undefined) {
-  if (tasks && tasks.length > 0) {
-    let sortedTasks = [...tasks].sort((a, b) => a.order - b.order);
-    //console.log('sortedTasks', sortedTasks)
-    if (sortedTasks[1] && sortedTasks[1].order === 0) {
-      sortedTasks[1] = { ...sortedTasks[1], order: 100 };
-    }
-    sortedTasks = sortedTasks.sort((a, b) => a.order - b.order);
-    return sortedTasks;
-  }
-  return [];
-}
