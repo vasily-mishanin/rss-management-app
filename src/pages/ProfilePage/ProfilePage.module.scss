@@ -2,16 +2,18 @@
 
 .profilePage {
   display: flex;
-  flex-direction: column;
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   border-radius: 0.2rem;
   width: 20rem;
   flex-grow: 0;
   padding: 1rem;
   height: auto;
   box-shadow: base.$shadow-main;
+
+  width: 100%;
 
   .title {
     text-align: center;

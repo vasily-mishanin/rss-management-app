@@ -3,24 +3,18 @@ import { ButtonGroup, TextField } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import LoadingIcon from '@mui/icons-material/HourglassBottomOutlined';
 import Box from '@mui/material/Box';
 import React, { useState } from 'react';
-import { columnsApi } from '../../services/ColumnService';
-import { IColumn } from '../../models/types';
-import { useAppSelector } from '../../hooks/redux';
-import { useParams } from 'react-router-dom';
 
 type FormColumnEditProps = {
   onClose: () => void;
+  onSubmit: (title: string) => void;
   fieldValue: string;
 };
 
-function FormColumnEdit({ onClose, fieldValue }: FormColumnEditProps) {
+function FormColumnEdit({ onClose, fieldValue, onSubmit }: FormColumnEditProps) {
   const [columnTitle, setColumnTitle] = useState(fieldValue);
   const [validationError, setValidationError] = useState(false);
-  const [updateColumn, resultUpdateColumn] = columnsApi.useUpdateColumnMutation();
-  const uiSlice = useAppSelector((state) => state.uiReducer);
 
   const isTextValid = (text: string) => {
     const regExpr = /^[A-Za-z0-9 ]{3,}$/;
@@ -37,15 +31,8 @@ function FormColumnEdit({ onClose, fieldValue }: FormColumnEditProps) {
     }
   };
 
-  const handleSubmit = async () => {
-    ('handleSubmit');
-    const updatedColumn: IColumn = {
-      _id: uiSlice.updatingColumnId,
-      title: columnTitle,
-      order: uiSlice.updatingColumn.order ? uiSlice.updatingColumn.order : 0,
-      boardId: uiSlice.updatingBoardId,
-    };
-    await updateColumn(updatedColumn);
+  const handleSubmit = () => {
+    onSubmit(columnTitle);
     onClose();
   };
 
@@ -64,32 +51,19 @@ function FormColumnEdit({ onClose, fieldValue }: FormColumnEditProps) {
         variant='standard'
         value={columnTitle}
         error={validationError}
-        helperText='3 or more latin letters/digits '
+        helperText='3 or more latin letters/digits'
         onChange={handleChange}
       />
       <ButtonGroup className={classes.actions}>
-        {resultUpdateColumn.isLoading && (
-          <IconButton
-            className={classes.iconBtn}
-            color='primary'
-            size='small'
-            aria-label='loading state icon'
-          >
-            <LoadingIcon />
-          </IconButton>
-        )}
-
-        {!resultUpdateColumn.isLoading && (
-          <IconButton
-            className={classes.iconBtn}
-            color='success'
-            size='small'
-            aria-label='chage column title'
-            type='submit'
-          >
-            <CheckIcon />
-          </IconButton>
-        )}
+        <IconButton
+          className={classes.iconBtn}
+          color='success'
+          size='small'
+          aria-label='chage column title'
+          type='submit'
+        >
+          <CheckIcon />
+        </IconButton>
 
         <IconButton
           className={classes.iconBtn}

@@ -8,6 +8,7 @@ import { boardsApi } from '../../services/BoardsService';
 import Confirmation from '../../components/Confirmation/Confirmation';
 import { form_mode, form_subject } from '../../models/constants';
 import { IBoard, INewBoard, FormDataTypes } from '../../models/types';
+import { useTranslation, Trans } from 'react-i18next';
 
 function BoardsPage() {
   const dispatch = useAppDispatch();
@@ -17,11 +18,13 @@ function BoardsPage() {
   const [addNewBoard, resultAddBoard] = boardsApi.useAddNewBoardMutation();
   const [updateBoard, resultUpdateBoard] = boardsApi.useUpdateBoardMutation();
   const [deleteBoardById, resultDeleteBoard] = boardsApi.useDeleteBoardByIdMutation();
+  const { t, i18n } = useTranslation();
 
   const handleClose = () => {
     dispatch(uiSliceActions.setShowNewSubjectModal(false));
     dispatch(uiSliceActions.toggleShowConfirmDeleteBoardModal(false));
     dispatch(uiSliceActions.setShowUpdateBoardModal(false));
+    dispatch(uiSliceActions.setUpdatingBoardTitle(''));
   };
 
   const handleDeleteBoard = async () => {
@@ -47,8 +50,12 @@ function BoardsPage() {
             mode={form_mode.ADD}
             subject={form_subject.BOARD}
             label='boardName'
-            title='Board Title'
-            message='Enter board title in latin letters (3 and more)'
+            title={i18n.resolvedLanguage === 'ru' ? 'Название доски' : 'Board Title'}
+            message={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Введите название доски (3 и более букв)'
+                : 'Enter board title  (3 and more letters)'
+            }
             onClose={handleClose}
             onFormSubmit={handleOnFormSubmit}
           />
@@ -58,7 +65,11 @@ function BoardsPage() {
       {uiState.showConfirmDeleteBoardModal && (
         <ModalWindow onClose={handleClose}>
           <Confirmation
-            questionText='Are you sure you want to remove this board?'
+            questionText={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Уверены, что хотите удаить эту доску'
+                : 'Are you sure you want to remove this board?'
+            }
             onConfirm={handleDeleteBoard}
             onCancel={handleClose}
           />
@@ -71,10 +82,15 @@ function BoardsPage() {
             mode={form_mode.UPDATE}
             subject={form_subject.BOARD}
             label='boardName'
-            title='New Board Title'
-            message='Enter new board title in latin letters (3 and more)'
+            title={i18n.resolvedLanguage === 'ru' ? 'Название новой доски' : 'New Board Title'}
+            message={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Введите название доски (3 и более букв)'
+                : 'Enter new board title (3 and more)'
+            }
             onClose={handleClose}
             onFormSubmit={handleOnFormSubmit}
+            updatingBoardTitle={uiState.updatingBoardTitle || ''}
           />
         </ModalWindow>
       )}

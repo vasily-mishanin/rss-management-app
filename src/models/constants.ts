@@ -1,4 +1,5 @@
-export const baseURL = 'https://rss-react-final-task-backend-production-19cf.up.railway.app';
+//export const baseURL = 'https://rss-react-final-task-backend-production-19cf.up.railway.app';
+export const baseURL = 'https://rss-react-final-task-backend.herokuapp.com';
 
 export enum endpoints {
   USERS = 'users',
@@ -30,6 +31,6 @@ export enum form_subject {
 }
 
 export const VALIDATE_name_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{3,}$/;
-export const VALIDATE_description_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9- ]{5,}$/;
+export const VALIDATE_description_REGEXPR = /^[А-Яа-яA-Za-z!@#$%^&*():0-9-'`" ]{5,}$/;
 export const VALIDATE_passport_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{8,}$/;
 export const VALIDATE_login_REGEXPR = /^[A-Za-z!@#$%^&*():0-9- ]{3,}$/;

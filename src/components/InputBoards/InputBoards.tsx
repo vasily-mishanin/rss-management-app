@@ -46,7 +46,7 @@ const InputBoards = ({
               required: required,
               pattern: { value: patternValue, message },
             })}
-            placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            placeholder={` ${title ? title.toLowerCase() : label.toLowerCase()}`}
             defaultValue={defaultValue ? defaultValue : ''}
           />
         ) : (
@@ -57,7 +57,7 @@ const InputBoards = ({
               required: required,
               pattern: { value: patternValue, message },
             })}
-            placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+            placeholder={` ${title ? title.toLowerCase() : label.toLowerCase()}`}
             defaultValue={defaultValue ? defaultValue : ''}
           />
         )}

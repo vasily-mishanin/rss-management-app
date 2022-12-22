@@ -7,7 +7,12 @@
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  width: 100%;
+  width: 20rem;
+
+  padding: 1rem;
+  padding-bottom: 2rem;
+  box-shadow: base.$shadow-main;
+  border-radius: 0.2rem;
 }
 
 .authSpinner {

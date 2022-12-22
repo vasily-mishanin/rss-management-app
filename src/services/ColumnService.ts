@@ -22,11 +22,12 @@ export const columnsApi = createApi({
       providesTags: (result) => ['Column'],
     }),
 
-    getColumnById: builder.mutation<IColumn, { boardId: string; columnId: string }>({
+    getColumnById: builder.query<IColumn, { boardId: string; columnId: string }>({
       query: ({ boardId, columnId }) => ({
         url: `/${endpoints.BOARDS}/${boardId}/${endpoints.COLUMNS}/${columnId}`,
         method: methods.GET,
       }),
+      providesTags: (result) => ['Column'],
     }),
 
     addNewColumn: builder.mutation<IColumn, INewColumn>({

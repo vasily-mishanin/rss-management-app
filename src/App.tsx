@@ -8,6 +8,7 @@ import type { IUser } from './models/types';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { authSliceActions, isStoredTokenValid } from './store/reducers/authSlice';
 import { storeScroll } from './helpers/headerAnimation';
+import { useTranslation, Trans } from 'react-i18next';
 
 // Update scroll position for first time
 storeScroll();
@@ -16,6 +17,8 @@ function App() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!authState.isLoggedIn) {

@@ -15,8 +15,8 @@ type TColumnsList = {
 };
 
 function ListColumns({ columns, updateColumnsOnDatabase, updateTasksOnDatabase }: TColumnsList) {
+  console.log('ListColumns');
   const [currentColumns, setCurrentColumns] = useState<IKanbanColumn[]>(columns);
-  const [flag, setFlag] = useState(false);
   const params = useParams();
 
   useEffect(() => {
@@ -141,7 +141,7 @@ function areEqual(prevProps: TColumnsList, nextProps: TColumnsList) {
   // Tasks
   const prevTasks = prevKanbanColumns.map((column) => column.tasks).flat();
   const nextTasks = nextKanbanColumns.map((column) => column.tasks).flat();
-  console.log('TASKS', prevTasks, nextTasks);
+  //console.log('TASKS', prevTasks, nextTasks);
 
   if (columnsAreEqual(prevColumns, nextColumns) && tasksAreEqual(prevTasks, nextTasks)) {
     console.log('columnsAreEqual and tasksAreEqual');
@@ -166,6 +166,7 @@ function columnsAreEqual(prevColumns: IColumn[], nextColumns: IColumn[]) {
 
   const prevTitles = prevColumns.map((col) => col.title);
   const nextTitles = nextColumns.map((col) => col.title);
+  console.log('columnsAreEqual', prevTitles.join(''), nextTitles.join(''));
   if (prevTitles.join('') !== nextTitles.join('')) return false;
 
   return true;

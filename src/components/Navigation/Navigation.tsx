@@ -3,11 +3,13 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import classes from './Navigation.module.scss';
 import { authSliceActions } from '../../store/reducers/authSlice';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
+import { Trans } from 'react-i18next';
 
 function Navigation() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const handleSignOut = () => {
     dispatch(authSliceActions.signOut());
     navigate('/');
@@ -26,23 +28,25 @@ function Navigation() {
         <>
           <li>
             <button className={classes.newBoardBtn} onClick={handleNewBoard}>
-              Create New Board
+              <Trans i18nKey='create'>Create New Board</Trans>
             </button>
           </li>
+
+          <li>
+            <NavLink className={linkStyle} to='/'>
+              <Trans i18nKey='boards'> All Boards</Trans>
+            </NavLink>
+          </li>
+
           <li>
             <NavLink className={linkStyle} to='profile'>
               <b style={{ color: 'salmon' }}>{authState.user.name || authState.user.login}</b>
             </NavLink>
           </li>
-          <li>
-            <NavLink className={linkStyle} to='/'>
-              Go to Main Page
-            </NavLink>
-          </li>
 
           <li>
             <button className={classes.signOutBtn} onClick={handleSignOut}>
-              Sign Out
+              <Trans i18nKey='signout'>Sign Out</Trans>
             </button>
           </li>
         </>
@@ -55,12 +59,12 @@ function Navigation() {
               className={linkStyle}
               to='login'
             >
-              Sign In
+              <Trans i18nKey='signin'>Sign In</Trans>
             </NavLink>
           </li>
           <li>
             <NavLink className={linkStyle} to='register'>
-              Sign Up
+              <Trans i18nKey='signup'>Sign Up</Trans>
             </NavLink>
           </li>
         </>

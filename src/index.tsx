@@ -11,6 +11,7 @@ import WelcomePage from './pages/WelcomePage/WelcomePage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
 import BoardPage from './pages/BoardPage/BoardPage';
+import './models/i18next.ts';
 
 const ROUTES = [
   {

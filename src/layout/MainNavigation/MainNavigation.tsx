@@ -3,6 +3,7 @@ import Navigation from '../../components/Navigation/Navigation';
 import classes from './MainNavigation.module.scss';
 import AppLogo from '../../components/AppLogo/AppLogo';
 import { useAppSelector } from '../../hooks/redux';
+import LangSwitcher from '../../components/LangSwitcher/LangSwitcher';
 
 const MainNavigation = () => {
   const authSlice = useAppSelector((state) => state.authReducer);
@@ -11,7 +12,10 @@ const MainNavigation = () => {
       <Link to='welcome'>
         <AppLogo text='GirAff' />
       </Link>
-      <Navigation />
+      <div className={classes.actions}>
+        <Navigation />
+        <LangSwitcher />
+      </div>
     </div>
   );
 };

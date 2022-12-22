@@ -22,12 +22,13 @@ import Confirmation from '../../components/Confirmation/Confirmation';
 import { boardsApi } from '../../services/BoardsService';
 import FormNewTask from '../../components/FormNewTask/FormNewTask';
 import { tasksApi } from '../../services/TaskService';
-import { useCallback } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 
 function BoardPage() {
   const params = useParams<{ boardId: string }>();
   const dispatch = useAppDispatch();
   const uiSlice = useAppSelector((s) => s.uiReducer);
+  const { t, i18n } = useTranslation();
 
   const { data: currentBoard } = boardsApi.useGetBoardByIdQuery(params.boardId || '');
 
@@ -133,8 +134,12 @@ function BoardPage() {
             mode={form_mode.ADD}
             subject={form_subject.COLUMN}
             label='columnName'
-            title='New Column Title'
-            message='Enter column title in latin letters (3 or more)'
+            title={i18n.resolvedLanguage === 'ru' ? 'Название новой колонки' : 'New Column Title'}
+            message={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Введите название колонки (3 и более символов)'
+                : 'Enter column title (3 or more symbols)'
+            }
             description={undefined}
             onClose={handleClose}
             onFormSubmit={handleOnFormSubmit}
@@ -145,7 +150,11 @@ function BoardPage() {
       {uiSlice.showConfirmDeleteColumnModal && (
         <ModalWindow onClose={handleClose}>
           <Confirmation
-            questionText='Are you sure you want to delete this column?'
+            questionText={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Вы уверены, что хотите удалить эту колонку?'
+                : 'Are you sure you want to delete this column?'
+            }
             onCancel={handleClose}
             onConfirm={handleConfirmDeleteColumn}
           />
@@ -177,7 +186,11 @@ function BoardPage() {
       {uiSlice.showConfirmDeleteTaskModal && (
         <ModalWindow onClose={handleClose}>
           <Confirmation
-            questionText='Are you sure you want to delete this task?'
+            questionText={
+              i18n.resolvedLanguage === 'ru'
+                ? 'Вы уверены, что хотите удалить эту задачу?'
+                : 'Are you sure you want to delete this task?'
+            }
             onCancel={handleClose}
             onConfirm={handleConfirmDeleteTask}
           />
@@ -194,7 +207,7 @@ function BoardPage() {
         )}
 
         <Button className={classes.addBtn} variant='contained' color='success' onClick={handleShowModal}>
-          ADD NEW COLUMN
+          <Trans i18nKey='addNewColumn'>ADD NEW COLUMN</Trans>
         </Button>
       </div>
 
@@ -217,6 +230,10 @@ export default BoardPage;
 const sortColumns = (columns: IColumn[]) => {
   if (columns.length > 0) {
     let sortedColumns = [...columns].sort((a, b) => a.order - b.order);
+    if (sortedColumns[1] && sortedColumns[1].order === 0) {
+      sortedColumns[1] = { ...sortedColumns[1], order: 100 };
+    }
+    sortedColumns = sortedColumns.sort((a, b) => a.order - b.order);
     return sortedColumns;
   }
   return [];

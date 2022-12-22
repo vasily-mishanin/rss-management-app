@@ -21,6 +21,7 @@ interface IUISlice {
 
   updatingTask: ITask;
   updatingColumn: IColumn;
+  updatingBoardTitle: string;
 }
 
 const initialTask = {
@@ -56,6 +57,7 @@ const initialState: IUISlice = {
 
   updatingTask: initialTask,
   updatingColumn: initialColumn,
+  updatingBoardTitle: '',
 };
 
 const uiSlice = createSlice({
@@ -96,6 +98,10 @@ const uiSlice = createSlice({
       state.updatingBoardId = action.payload;
     },
 
+    setUpdatingBoardTitle: (state, action: PayloadAction<string>) => {
+      state.updatingBoardTitle = action.payload;
+    },
+
     setRemovingColumnId: (state, action: PayloadAction<string>) => {
       state.removingColumnId = action.payload;
     },
@@ -111,16 +117,20 @@ const uiSlice = createSlice({
     setUpdatingTaskId: (state, action: PayloadAction<string>) => {
       state.updatingTaskId = action.payload;
     },
+
     setUpdatingTask: (state, action: PayloadAction<ITask>) => {
       state.updatingTask = action.payload;
     },
+
     setUpdatingColumn: (state, action: PayloadAction<IColumn>) => {
       state.updatingColumn = action.payload;
     },
+
     resetUpdatingTask: (state) => {
       state.updatingTask = initialTask;
       state.updatingTaskId = '';
     },
+
     resetUpdatingColumn: (state) => {
       state.updatingColumn = initialColumn;
       state.updatingColumnId = '';

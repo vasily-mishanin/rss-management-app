@@ -13,6 +13,7 @@ import {
 } from '../../models/constants';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useDispatch } from 'react-redux';
+import { useTranslation, Trans } from 'react-i18next';
 
 type Inputs = {
   taskName?: string;
@@ -33,6 +34,8 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
   const params = useParams();
   const dispatch = useDispatch();
   const uiSlice = useAppSelector((state) => state.uiReducer);
+  const { t, i18n } = useTranslation();
+
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     if (params.boardId) {
       const taskData: INewTask | ITask = {
@@ -60,19 +63,23 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
       <InputBoards
         type='text'
         label='taskName'
-        title='Task Title'
+        title={i18n.resolvedLanguage === 'ru' ? 'Название задания' : 'Task Title'}
         register={register}
         required
         patternValue={VALIDATE_name_REGEXPR}
         error={formState.errors.taskName || null}
-        message='Enter task title (3 or more characters)'
+        message={
+          i18n.resolvedLanguage === 'ru'
+            ? 'Введите название задания (3 и более символов)'
+            : 'Enter task title (3 or more characters)'
+        }
         defaultValue={uiSlice.updatingTask ? uiSlice.updatingTask.title : undefined}
       />
 
       <InputBoards
         type='text'
         label='taskDescription'
-        title='Description'
+        title={i18n.resolvedLanguage === 'ru' ? 'Описание' : 'Description'}
         register={register}
         required
         patternValue={VALIDATE_description_REGEXPR}
@@ -88,7 +95,7 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
         ) : (
           <div className={classes.actionButtons}>
             <Button variant='contained' className={classes.closeBtn} onClick={onClose}>
-              Cancel
+              <Trans i18nKey='cancel'>Cancel</Trans>
             </Button>
 
             <Button
@@ -97,7 +104,11 @@ function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormPr
               className={classes.addBtn}
               disabled={!formState.isDirty}
             >
-              {mode === form_mode.UPDATE ? 'Update' : 'Add'}
+              {mode === form_mode.UPDATE ? (
+                <Trans i18nKey='update'> 'Update' </Trans>
+              ) : (
+                <Trans i18nKey='add'> 'Add' </Trans>
+              )}
             </Button>
           </div>
         )}

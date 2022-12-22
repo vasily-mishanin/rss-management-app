@@ -7,7 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import { Card } from '@mui/material';
 import DragIcon from '@mui/icons-material/DragIndicatorSharp';
 import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useDispatch } from 'react-redux';
 import { ITask } from '../../models/types';
@@ -62,7 +62,7 @@ function TaskCard({ task, index }: ITaskCardProps) {
                 aria-label='close edit form'
                 onClick={showDeleteTaskModal}
               >
-                <CloseIcon fontSize='small' />
+                <DeleteIcon fontSize='small' />
               </IconButton>
             </Card>
           </li>

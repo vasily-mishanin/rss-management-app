@@ -17,7 +17,6 @@ import EditIcon from '@mui/icons-material/Edit';
 function BoardCard({ title, _id }: Pick<IBoard, 'title' | '_id'>) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const uiSlice = useAppSelector((state) => state.uiReducer);
 
   const handleOpenBoard = () => {
     navigate(`/boards/${_id}`);
@@ -33,6 +32,7 @@ function BoardCard({ title, _id }: Pick<IBoard, 'title' | '_id'>) {
     e.stopPropagation();
     dispatch(uiSliceActions.setShowUpdateBoardModal(true));
     dispatch(uiSliceActions.setUpdatingBoardId(_id));
+    dispatch(uiSliceActions.setUpdatingBoardTitle(title));
   };
 
   return (

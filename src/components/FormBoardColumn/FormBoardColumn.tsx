@@ -1,12 +1,12 @@
 import classes from './FormBoardColumn.module.scss';
 import InputBoards from '../InputBoards/InputBoards';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useAppSelector, useAppDispatch } from '../../hooks/redux';
+import { useAppSelector } from '../../hooks/redux';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 import type { IColumn, FormDataTypes } from '../../models/types';
-import { form_mode, form_subject } from '../../models/constants';
+import { form_mode, form_subject, VALIDATE_name_REGEXPR } from '../../models/constants';
+import { useTranslation, Trans } from 'react-i18next';
 
 type Inputs = {
   boardName?: string;
@@ -24,6 +24,7 @@ export interface IFormProps {
   description?: string;
   mode: form_mode;
   subject: form_subject;
+  updatingBoardTitle?: string;
 }
 
 function FormBoardColumn({
@@ -36,13 +37,14 @@ function FormBoardColumn({
   description,
   mode,
   subject,
+  updatingBoardTitle,
 }: IFormProps) {
   const { register, handleSubmit, formState, reset } = useForm<Inputs>();
   const authState = useAppSelector((state) => state.authReducer);
   const uiState = useAppSelector((state) => state.uiReducer);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const params = useParams();
+  const { t, i18n } = useTranslation();
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     if (subject === form_subject.BOARD) {
@@ -88,17 +90,25 @@ function FormBoardColumn({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
       {mode === form_mode.ADD && subject === form_subject.BOARD && (
-        <h4 className={classes.title}>Add new board</h4>
+        <h4 className={classes.title}>
+          <Trans i18nKey='addNewBoard'>Add new board</Trans>
+        </h4>
       )}
       {mode === form_mode.UPDATE && subject === form_subject.BOARD && (
-        <h4 className={classes.title}>Update this board</h4>
+        <h4 className={classes.title}>
+          <Trans i18nKey='updateBoard'>Update this board</Trans>
+        </h4>
       )}
 
       {mode === form_mode.ADD && subject === form_subject.COLUMN && (
-        <h4 className={classes.title}>Add new column</h4>
+        <h4 className={classes.title}>
+          <Trans i18nKey='addNewColumn'>Add new column</Trans>
+        </h4>
       )}
       {mode === form_mode.UPDATE && subject === form_subject.COLUMN && (
-        <h4 className={classes.title}>Update this column</h4>
+        <h4 className={classes.title}>
+          <Trans i18nKey='updateColumn'>Update this column</Trans>
+        </h4>
       )}
 
       <InputBoards
@@ -107,9 +117,10 @@ function FormBoardColumn({
         title={title}
         register={register}
         required
-        patternValue={/^[A-Za-z0-9 ]{3,}$/}
+        patternValue={VALIDATE_name_REGEXPR}
         error={error() || null}
         message={message}
+        defaultValue={updatingBoardTitle}
       />
 
       <div className={classes.actions}>
@@ -118,7 +129,7 @@ function FormBoardColumn({
         ) : (
           <div className={classes.actionButtons}>
             <Button variant='contained' className={classes.closeBtn} onClick={onClose}>
-              Cancel
+              <Trans i18nKey='cancel'>Cancel</Trans>
             </Button>
 
             <Button
@@ -127,8 +138,8 @@ function FormBoardColumn({
               className={classes.addBtn}
               disabled={!formState.isDirty}
             >
-              {mode === form_mode.ADD && 'Add'}
-              {mode === form_mode.UPDATE && 'Update'}
+              {mode === form_mode.ADD && (i18n.resolvedLanguage === 'ru' ? 'Добавить' : 'Add')}
+              {mode === form_mode.UPDATE && (i18n.resolvedLanguage === 'ru' ? 'Обновить' : 'Update')}
             </Button>
           </div>
         )}

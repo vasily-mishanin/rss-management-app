@@ -6,6 +6,7 @@ import { updateUserThunk } from '../../store/reducers/authSlice';
 import { IUser } from '../../models/types';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation, Trans } from 'react-i18next';
 
 type Inputs = {
   name?: string;
@@ -18,6 +19,7 @@ function FormProfile() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
     const user: IUser = {
@@ -40,41 +42,41 @@ function FormProfile() {
       <Input
         type='text'
         label='name'
-        title='New Name'
+        title={i18n.resolvedLanguage === 'ru' ? 'Новое имя' : 'New Name'}
         register={register}
         required
         patternValue={/^[A-Za-z0-9]$/}
         error={formState.errors.name ? formState.errors.name : null}
         message='Enter name in latin letters or digits'
-      ></Input>
+      />
 
       <Input
         type='text'
         label='login'
-        title='New Login'
+        title={i18n.resolvedLanguage === 'ru' ? 'Новый логин' : 'New Login'}
         register={register}
         required
         patternValue={/[A-Za-z0-9]/}
         error={formState.errors.login ? formState.errors.login : null}
         message='Enter login in latin letters or digits'
-      ></Input>
-
+      />
       <Input
         type='password'
         label='password'
-        title='New Password'
+        title={i18n.resolvedLanguage === 'ru' ? 'Новый пароль' : 'New Password'}
         register={register}
         required
         patternValue={/[A-Za-z0-9]{8,}/}
         error={formState.errors.password ? formState.errors.password : null}
         message='Password should consist of at least 8 latin letters or digits'
-      ></Input>
+      />
+
       <div className={classes.actions}>
         {authState.isLoading ? (
           <p className={classes.authSpinner}>Loading ...</p>
         ) : (
           <Button type='submit' variant='contained' className={classes.authBtn} disabled={!formState.isDirty}>
-            Submit Changes
+            <Trans i18nKey='submitChanges'>Submit Changes</Trans>
           </Button>
         )}
       </div>

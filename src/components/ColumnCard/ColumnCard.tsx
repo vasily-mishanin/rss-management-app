@@ -6,17 +6,18 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import DragIcon from '@mui/icons-material/DragIndicatorSharp';
-import type { IColumn, ITask, IUpdatedTask } from '../../models/types';
+import type { IColumn, ITask } from '../../models/types';
 import { useAppDispatch } from '../../hooks/redux';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
 import { useParams } from 'react-router-dom';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import FormColumnEdit from '../FormColumnEdit/FormColumnEdit';
 import ListTasks from '../ListTasks/ListTasks';
 import { CircularProgress } from '@mui/material';
 import TaskCard from '../TaskCard/TaskCard';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { Draggable } from 'react-beautiful-dnd';
+import { columnsApi } from '../../services/ColumnService';
+import { useTranslation, Trans } from 'react-i18next';
 
 export interface IColumnCardProps {
   column: IColumn;
@@ -27,11 +28,16 @@ export interface IColumnCardProps {
 function ColumnCard({ column, index, tasks }: IColumnCardProps) {
   const [formMode, setFormMode] = useState(false);
   const [currentTasks, setCurrentTasks] = useState<ITask[]>(tasks);
-  const [flag, setFlag] = useState(false);
+  const [currentTitle, setCurrentTitle] = useState<string>(column.title);
+
+  const { t, i18n } = useTranslation();
+
+  const [updateColumn, resultUpdateColumn] = columnsApi.useUpdateColumnMutation();
 
   useEffect(() => {
     setCurrentTasks(tasks);
-  }, [tasks]);
+    setCurrentTitle(column.title);
+  }, [tasks, column]);
 
   const dispatch = useAppDispatch();
   const params = useParams();
@@ -47,19 +53,21 @@ function ColumnCard({ column, index, tasks }: IColumnCardProps) {
   };
 
   const handleEditColumn = () => {
-    dispatch(uiSliceActions.setUpdatingColumnId(column._id));
-    dispatch(uiSliceActions.setUpdatingColumn(column));
-    if (params.boardId) {
-      dispatch(uiSliceActions.setUpdatingBoardId(params.boardId));
-    }
     setFormMode(true);
   };
 
-  const handleFromClose = () => {
+  const handleFormClose = () => {
     setFormMode(false);
   };
 
-  //const sortedTasks = sortTasks(currentTasks);
+  const handleEditColumnSubmit = (title: string) => {
+    setCurrentTitle(title);
+    const newColumn: IColumn = {
+      ...column,
+      title: title,
+    };
+    updateColumn(newColumn);
+  };
 
   return (
     <Draggable draggableId={column._id} index={index} key={column._id}>
@@ -75,7 +83,7 @@ function ColumnCard({ column, index, tasks }: IColumnCardProps) {
                     color='text.secondary'
                     onClick={handleEditColumn}
                   >
-                    {column.title}
+                    {currentTitle}
                   </Typography>
 
                   <IconButton
@@ -90,7 +98,13 @@ function ColumnCard({ column, index, tasks }: IColumnCardProps) {
                 </div>
               )}
 
-              {formMode && <FormColumnEdit onClose={handleFromClose} fieldValue={column.title} />}
+              {formMode && (
+                <FormColumnEdit
+                  onClose={handleFormClose}
+                  fieldValue={currentTitle}
+                  onSubmit={handleEditColumnSubmit}
+                />
+              )}
 
               <hr />
 
@@ -105,11 +119,13 @@ function ColumnCard({ column, index, tasks }: IColumnCardProps) {
 
             <CardActions className={classes.actions}>
               <Button size='small' color='error' onClick={handleDeleteColumn}>
-                DELETE
+                <Trans i18nKey='delete'>DELETE</Trans>
               </Button>
 
+              {resultUpdateColumn.isLoading && <CircularProgress size='1rem' />}
+
               <Button size='small' onClick={onAddTask}>
-                ADD NEW TASK
+                <Trans i18nKey='addNewTask'>ADD NEW TASK</Trans>
               </Button>
             </CardActions>
           </Card>

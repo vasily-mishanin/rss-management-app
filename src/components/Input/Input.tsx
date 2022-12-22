@@ -28,11 +28,11 @@ const Input = ({ type, label, register, required, patternValue, error, message, 
         <input
           id={label}
           type={type}
-          {...register(label.toLocaleLowerCase(), {
+          {...register(label.toLowerCase(), {
             required: required,
             pattern: { value: patternValue, message },
           })}
-          placeholder={`Enter ${title ? title.toLowerCase() : label.toLowerCase()}`}
+          placeholder={` ${title ? title.toLowerCase() : label.toLowerCase()}`}
         />
       </fieldset>
       <p className={classes.errorMessage}>{error ? message : ''}</p>

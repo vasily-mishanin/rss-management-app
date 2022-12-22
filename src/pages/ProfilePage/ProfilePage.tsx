@@ -9,6 +9,7 @@ import { Button, Snackbar } from '@mui/material';
 import * as api_users from '../../api/api_users';
 import { authSliceActions } from '../../store/reducers/authSlice';
 import { uiSliceActions } from '../../store/reducers/uiSlice';
+import { useTranslation, Trans } from 'react-i18next';
 
 function ProfilePage() {
   const [dialog, setDialog] = useState(false);
@@ -16,6 +17,7 @@ function ProfilePage() {
   const dispatch = useAppDispatch();
   const authState = useAppSelector((state) => state.authReducer);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     if (!authState.isLoggedIn) {
@@ -63,12 +65,14 @@ function ProfilePage() {
         </ModalWindow>
       )}
 
-      <h3 className={classes.title}>Here you can change your profile data</h3>
+      <h3 className={classes.title}>
+        <Trans i18nKey='profile'>Here you can change your profile data</Trans>
+      </h3>
 
       <FormProfile />
 
       <Button onClick={() => setDialog(true)} variant='outlined' color='warning' size='small'>
-        Delete Current User
+        <Trans i18nKey='deleteCurrent'>Delete Current User</Trans>
       </Button>
 
       <Snackbar

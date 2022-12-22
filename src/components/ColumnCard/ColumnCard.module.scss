@@ -11,10 +11,6 @@
   width: 275px;
   min-height: 50vh;
   max-height: 90%;
-  //overflow-y: scroll;
-
-  //background: url(../../assets/wood-pattern.png);
-
   background-color: #fdfdfe;
   opacity: 1;
   background-image: radial-gradient(#f6c107 0.4px, #fdfdfe 0.4px);
@@ -42,6 +38,7 @@
       .title {
         font-size: 1.5rem;
         text-align: center;
+        color: base.$main-font;
       }
 
       .editIcon {
