@@ -28,6 +28,11 @@ i18n
           update: 'Update',
           delete: 'Delete',
           addNewTask: 'Add New Task',
+          aboutApp:
+            'This is <1>GirAff</1>. <br/>The App will help you to organize work and increase productivity of your team. <br /> It is useful for self organizing too.',
+          hi: "Hi! I'm Vasily",
+          frontentdDeveloper: 'Frontend developer',
+          wasUsing: 'In this app I was using:',
         },
       },
       ru: {
@@ -50,6 +55,11 @@ i18n
           update: 'Обновить',
           delete: 'Удалить',
           addNewTask: 'Новое задание',
+          aboutApp:
+            'Это <1>GirAff</1>. <br/>  Приложение поможет организовать работу и повысить продуктивность вашей команды.  <br /> Оно также полезно для самоорганизации ',
+          hi: 'Привет! Я Василий',
+          frontentdDeveloper: 'Фронтенд разработчик',
+          wasUsing: 'В этом приложении я использовал:',
         },
       },
     },

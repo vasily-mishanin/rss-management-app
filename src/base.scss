@@ -14,6 +14,13 @@ $gradient-main: linear-gradient(
   rgba(0, 212, 255, 1) 100%
 );
 
+$gradient-main-reversed: linear-gradient(
+  135deg,
+  rgba(0, 212, 255, 1) 0%,
+  rgba(9, 96, 121, 0.9724483543417367) 67%,
+  rgb(23, 20, 87) 100%
+);
+
 $gradient-secondary: linear-gradient(
   135deg,
   rgba(2, 0, 36, 1) 0%,

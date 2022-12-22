@@ -61,7 +61,18 @@
       color: base.$main-font;
       font-weight: bolder;
     }
+
+    .link {
+      padding: 0.2rem 0.5rem;
+      background: base.$gradient-main;
+      color: base.$main-columns;
+      border-radius: 0.25rem;
+    }
   }
+}
+
+.name {
+  color: base.$main-red;
 }
 
 .projectInfo {

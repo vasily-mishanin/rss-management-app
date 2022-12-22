@@ -1,6 +1,6 @@
 .board {
   padding: 1rem;
-  // border: 2px solid magenta;
+  overflow-x: scroll;
 
   display: flex;
   gap: 1rem;
@@ -19,7 +19,7 @@
 
     .addBtn {
       min-width: 11rem;
-      height: 2.5rem;
+      height: 3rem;
     }
   }
 
