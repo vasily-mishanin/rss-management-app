@@ -30,7 +30,6 @@ const Footer = (): JSX.Element => {
           </div>
 
           <div className={classes.footer_year}>&copy; 2022</div>
-
           <div className={classes.footer_rss_link}>
             <a href={SCHOOL_LINK} target='_blank' rel='noreferrer'></a>
           </div>

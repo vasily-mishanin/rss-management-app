@@ -1,50 +1,60 @@
 import classes from './WelcomePage.module.scss';
-import { Avatar, Typography, Paper } from '@mui/material';
-import AppLogo from '../../components/AppLogo/AppLogo';
+import { Avatar, Typography, Paper, List, ListItem, ListItemText } from '@mui/material';
+import KanbanBoardImg from '../../assets/kanbanwork1.jpg';
+import EastIcon from '@mui/icons-material/East';
 
 const AVA_LINK = 'https://avatars.githubusercontent.com/u/58665427?v=4';
 
 function WelcomePage() {
+  const tools = [
+    ['Main', 'React JS'],
+    ['Storage', 'Redux Toolkit'],
+    ['Routing', 'React Router 6.4'],
+    ['Forms', 'React Hook Forms'],
+    ['Drag And Drop', 'React Beautiful DND'],
+    ['Internationalization', 'i18next'],
+    ['UI', 'Material UI'],
+  ];
   return (
     <div className={classes.welcome}>
+      <div className={classes.about}>
+        <div className={classes.image}>
+          <img src={KanbanBoardImg} alt='kanban board' />
+        </div>
+        <div className={classes.textcontainer}>
+          <Typography className={classes.text} variant='subtitle1' align='center'>
+            This App will help you to organize work and increase productivity of your team. <br /> It useful
+            for self organizing too.
+          </Typography>
+        </div>
+      </div>
+      <div className={classes.video}>
+        <iframe src='https://www.youtube.com/embed/S0e_5a2WB60'></iframe>
+      </div>
+
       <Paper elevation={3} className={classes.personalInfo}>
         <div className={classes.hisection}>
           <Avatar className={classes.avatar} alt='Remy Sharp' src={AVA_LINK} sx={{ width: 80, height: 80 }} />
           <Typography className={classes.title} variant='h4'>
             Hi! I'm Vasily
           </Typography>
+
+          <Typography className={classes.title} variant='h5'>
+            Frontend developer
+          </Typography>
+
+          <Typography className={classes.title} variant='h6'>
+            In this app I was using:
+          </Typography>
+
+          <List dense>
+            {tools.map((tool) => (
+              <ListItem>
+                {tool[0]} <EastIcon style={{ margin: '0 1rem' }} /> {tool[1]}
+              </ListItem>
+            ))}
+          </List>
         </div>
-        <Typography className={classes.title} variant='h5' gutterBottom>
-          Frontend developer
-        </Typography>
-        <Typography className={classes.title} variant='body1' gutterBottom>
-          Driven self-taught student leveraging studies in Frontend development seeks real-world experience as
-          trainee/junior. Offers strong interpersonal and task prioritization skills, eager to learn new and
-          develop cool stuff for all people.
-        </Typography>
-      </Paper>
-
-      <Paper elevation={2} className={classes.picture}></Paper>
-
-      <Paper elevation={2} className={classes.projectInfo}>
-        <AppLogo />
-
-        <Typography className={classes.title} variant='h3' gutterBottom>
-          This App will help you to become more productive
-        </Typography>
-
-        <Typography className={classes.title} variant='h4'>
-          Wait! It'll REALLY help you!
-        </Typography>
-
-        <Typography variant='body2' display='block' gutterBottom color='salmon'>
-          not like other Apps
-        </Typography>
-
-        <Typography className={classes.title} variant='h4'>
-          Heh.. I used: Typescript, React, RTK, react-hook-form in this app. <br /> I definetely will finish
-          and polish this app for my portfolio.
-        </Typography>
       </Paper>
     </div>
   );

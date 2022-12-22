@@ -1,54 +1,135 @@
 @use '../../base.scss';
 
 .welcome {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 100%;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .about {
+    .image {
+      img {
+        width: 100%;
+      }
+    }
+
+    .textcontainer {
+      .text {
+        color: base.$main-font;
+        font-weight: bolder;
+      }
+    }
+  }
+
+  .video {
+    position: relative;
+    padding-bottom: 50%; /* 16:9 */
+    height: 0;
+    width: 100%;
+
+    iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 0.5rem;
+    }
+  }
 }
 
 .personalInfo {
-  grid-column: 1 / span 1;
-  grid-row: 1 / span 1;
-
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 700px;
   padding: 2rem;
 
   .hisection {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
     align-items: center;
+    gap: 1rem;
 
     .avatar {
       margin-bottom: 1rem;
     }
 
     .title {
-      //   font-size: 2rem;
-      //   font-weight: 400;
+      color: base.$main-font;
+      font-weight: bolder;
     }
   }
 }
 
-.picture {
-  display: block;
-  grid-column: 2 / span 1;
-  grid-row: 1 / span 1;
-  background: url('../../assets/taiichi_ohno.jpg') no-repeat;
-  background-size: cover;
-}
-
 .projectInfo {
   display: block;
-  grid-column: 1 / span 2;
-  grid-row: 2 / span 1;
 
   width: 90%;
   padding: 2rem;
   .title {
     color: base.$base-blue;
+  }
+}
+
+///////
+///
+@media (min-width: 768px) {
+  .welcome {
+    .about {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+
+      .image {
+        width: 50%;
+        img {
+        }
+      }
+      .textcontainer {
+        width: 25rem;
+        .text {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .video {
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 0.5rem;
+      }
+    }
+  }
+}
+
+@media (min-width: 1023px) {
+  .welcome {
+    .about {
+      .image {
+        img {
+        }
+      }
+      .textcontainer {
+        .text {
+        }
+      }
+    }
+
+    .video {
+      width: 80%;
+
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 0.5rem;
+      }
+    }
   }
 }
