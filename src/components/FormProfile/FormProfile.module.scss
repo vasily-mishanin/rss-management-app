@@ -1,0 +1,33 @@
+@use '../../base.scss';
+
+.profileForm {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  width: 20rem;
+
+  padding: 1rem;
+  padding-bottom: 2rem;
+  box-shadow: base.$shadow-main;
+  border-radius: 0.2rem;
+}
+
+.authSpinner {
+  //align-self: center;
+}
+
+.actions {
+  height: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.registrationError {
+  color: base.$main-red;
+}

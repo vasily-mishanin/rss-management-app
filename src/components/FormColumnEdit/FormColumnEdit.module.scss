@@ -1,0 +1,12 @@
+.columnform {
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .iconBtn {
+    width: 2rem;
+    height: 2rem;
+  }
+}

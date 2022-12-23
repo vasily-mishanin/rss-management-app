@@ -1,0 +1,44 @@
+@use './base.scss';
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    height: 3rem;
+    padding: 2rem 2rem;
+    position: sticky;
+    top: 0;
+    background: base.$gradient-main;
+    z-index: 50;
+    opacity: 0.95;
+  }
+
+  &__main {
+    width: 100%;
+    max-width: 1200px;
+    align-self: center;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: auto;
+    display: flex;
+  }
+
+  &__footer {
+    flex-shrink: 0;
+    background-color: base.$base-blue;
+    padding: 0.25rem;
+  }
+}
+
+html:not([data-scroll='0']) {
+  .app__header {
+    background: base.$gradient-secondary;
+    position: sticky;
+    top: 0;
+    transition: all 0.3s ease-in;
+    opacity: 0.95;
+  }
+}

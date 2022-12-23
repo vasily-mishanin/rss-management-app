@@ -1,0 +1,9 @@
+.langswitcher {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .item {
+    font-size: 0.75rem;
+  }
+}

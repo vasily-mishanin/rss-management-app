@@ -1,0 +1,28 @@
+.board {
+  padding: 1rem;
+  overflow-x: scroll;
+
+  display: flex;
+  gap: 1rem;
+  flex-direction: column;
+  align-self: flex-start;
+
+  .navigation {
+    font-size: 1.5rem;
+    display: flex;
+  }
+
+  .columns {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+
+    .addBtn {
+      min-width: 11rem;
+      height: 3rem;
+    }
+  }
+
+  min-height: 50%;
+  max-height: 90%;
+}

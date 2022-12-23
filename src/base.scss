@@ -1,0 +1,33 @@
+$base-blue: #5da7db;
+$light-blue: #81c6e8;
+
+$main-red: #ff6464;
+$main-tasks: #bad1c2;
+$main-columns: #ededed;
+
+$main-font: #3c4048;
+
+$gradient-main: linear-gradient(
+  135deg,
+  rgba(2, 0, 36, 1) 0%,
+  rgba(9, 96, 121, 0.9724483543417367) 67%,
+  rgba(0, 212, 255, 1) 100%
+);
+
+$gradient-main-reversed: linear-gradient(
+  135deg,
+  rgba(0, 212, 255, 1) 0%,
+  rgba(9, 96, 121, 0.9724483543417367) 67%,
+  rgba(2, 0, 36, 1) 100%
+);
+
+$gradient-secondary: linear-gradient(
+  135deg,
+  rgba(2, 0, 36, 1) 0%,
+  rgba(11, 121, 9, 0.6783307072829132) 73%,
+  rgba(0, 212, 255, 1) 100%
+);
+
+$shadow-main: -8px 20px 55px -25px rgba(0, 0, 0, 0.75);
+$shadow-secondary: 6px 6px 14px #cccccc, -6px -6px 14px #f4f4f4;
+$shadow-third: 0 2px 10px 1px rgba(3, 3, 3, 0.2);

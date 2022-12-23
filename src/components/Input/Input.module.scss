@@ -1,0 +1,33 @@
+.wrapper {
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  width: 100%;
+
+  legend {
+    label {
+      font-size: 0.85rem;
+    }
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    outline: none;
+    padding-left: 1rem;
+    font-size: 1rem;
+    width: 100%;
+  }
+}
+
+.errorMessage {
+  font-size: 14px;
+  color: salmon;
+  height: 1rem;
+}

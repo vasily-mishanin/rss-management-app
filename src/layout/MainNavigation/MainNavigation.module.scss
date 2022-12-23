@@ -1,0 +1,19 @@
+.navigation {
+  color: blue;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.greeting {
+  color: white;
+}
+
+@media (max-width: 374px) {
+}

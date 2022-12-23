@@ -1,0 +1,24 @@
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 20rem;
+  //height: 15rem;
+  z-index: 100;
+  overflow: hidden;
+
+  margin-top: -7.5rem;
+  margin-left: -10rem;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  //gap: 1rem;
+  //justify-content: center;
+}
+
+.closeBtn {
+  //position: absolute;
+  align-self: flex-end;
+  justify-self: flex-start;
+}

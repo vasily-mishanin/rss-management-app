@@ -1,0 +1,14 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+
+  img {
+    width: 2rem;
+  }
+
+  span {
+    font-size: 1rem;
+  }
+}

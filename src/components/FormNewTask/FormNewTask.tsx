@@ -1,0 +1,121 @@
+import classes from './FormNewTask.module.scss';
+import InputBoards from '../InputBoards/InputBoards';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { useAppSelector } from '../../hooks/redux';
+import { Button } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { FormDataTypes, INewTask, ITask } from '../../models/types';
+import {
+  form_mode,
+  form_subject,
+  VALIDATE_description_REGEXPR,
+  VALIDATE_name_REGEXPR,
+} from '../../models/constants';
+import { uiSliceActions } from '../../store/reducers/uiSlice';
+import { useDispatch } from 'react-redux';
+import { useTranslation, Trans } from 'react-i18next';
+
+type Inputs = {
+  taskName?: string;
+  taskDescription?: string;
+};
+
+export interface IFormProps {
+  onClose: () => void;
+  onFormSubmit: (data: FormDataTypes) => void;
+  columnId?: string;
+  mode: form_mode;
+  subject: form_subject;
+}
+
+function FormNewTask({ columnId, onClose, onFormSubmit, mode, subject }: IFormProps) {
+  const { register, handleSubmit, formState, reset } = useForm<Inputs>();
+  const authState = useAppSelector((state) => state.authReducer);
+  const params = useParams();
+  const dispatch = useDispatch();
+  const uiSlice = useAppSelector((state) => state.uiReducer);
+  const { t, i18n } = useTranslation();
+
+  const onSubmit: SubmitHandler<Inputs> = (inputsData) => {
+    if (params.boardId) {
+      const taskData: INewTask | ITask = {
+        boardId: params.boardId,
+        columnId: uiSlice.updatingColumnId,
+        title: inputsData.taskName || 'no name',
+        order: uiSlice.updatingTask.order || 0,
+        description: inputsData.taskDescription || 'no description',
+        userId: '0',
+        users: [authState.user._id],
+        ...(mode === form_mode.UPDATE && { _id: uiSlice.updatingTaskId }),
+      };
+      onFormSubmit(taskData);
+      dispatch(uiSliceActions.resetUpdatingTask());
+      onClose();
+    }
+
+    if (formState.isSubmitSuccessful) {
+      reset();
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
+      <InputBoards
+        type='text'
+        label='taskName'
+        title={i18n.resolvedLanguage === 'ru' ? 'Название задания' : 'Task Title'}
+        register={register}
+        required
+        patternValue={VALIDATE_name_REGEXPR}
+        error={formState.errors.taskName || null}
+        message={
+          i18n.resolvedLanguage === 'ru'
+            ? 'Введите название задания (3 и более символов)'
+            : 'Enter task title (3 or more characters)'
+        }
+        defaultValue={uiSlice.updatingTask ? uiSlice.updatingTask.title : undefined}
+      />
+
+      <InputBoards
+        type='text'
+        label='taskDescription'
+        title={i18n.resolvedLanguage === 'ru' ? 'Описание' : 'Description'}
+        register={register}
+        required
+        patternValue={VALIDATE_description_REGEXPR}
+        error={formState.errors.taskDescription || null}
+        message='Enter description (5 or more characters)'
+        variant='textarea'
+        defaultValue={uiSlice.updatingTask ? uiSlice.updatingTask.description : undefined}
+      />
+
+      <div className={classes.actions}>
+        {authState.isLoading ? (
+          <p className={classes.authSpinner}>Loading ...</p>
+        ) : (
+          <div className={classes.actionButtons}>
+            <Button variant='contained' className={classes.closeBtn} onClick={onClose}>
+              <Trans i18nKey='cancel'>Cancel</Trans>
+            </Button>
+
+            <Button
+              type='submit'
+              variant='contained'
+              className={classes.addBtn}
+              disabled={!formState.isDirty}
+            >
+              {mode === form_mode.UPDATE ? (
+                <Trans i18nKey='update'> 'Update' </Trans>
+              ) : (
+                <Trans i18nKey='add'> 'Add' </Trans>
+              )}
+            </Button>
+          </div>
+        )}
+      </div>
+      {authState.error?.message && <p className={classes.registrationError}>{authState.error?.message}</p>}
+    </form>
+  );
+}
+
+export default FormNewTask;
