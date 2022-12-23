@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/rss-management-app/static/css/main.95a202ea.css",
+    "main.css": "/rss-management-app/static/css/main.3ee52e6f.css",
     "main.js": "/rss-management-app/static/js/main.8676c647.js",
     "static/js/787.28cb0dcd.chunk.js": "/rss-management-app/static/js/787.28cb0dcd.chunk.js",
     "static/media/kanbanwork1.jpg": "/rss-management-app/static/media/kanbanwork1.6bdada16787305602e29.jpg",
@@ -8,12 +8,12 @@
     "static/media/logo.png": "/rss-management-app/static/media/logo.d1ae836699e54f2df908.png",
     "static/media/logo-rss-js.svg": "/rss-management-app/static/media/logo-rss-js.ad178c0df28bc133be34.svg",
     "index.html": "/rss-management-app/index.html",
-    "main.95a202ea.css.map": "/rss-management-app/static/css/main.95a202ea.css.map",
+    "main.3ee52e6f.css.map": "/rss-management-app/static/css/main.3ee52e6f.css.map",
     "main.8676c647.js.map": "/rss-management-app/static/js/main.8676c647.js.map",
     "787.28cb0dcd.chunk.js.map": "/rss-management-app/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.95a202ea.css",
+    "static/css/main.3ee52e6f.css",
     "static/js/main.8676c647.js"
   ]
 }
