@@ -9,7 +9,7 @@ body,
 #root {
   height: 100%;
   width: 100%;
-  overflow-x: hidden;
+  // overflow-x: hidden;
 }
 
 body {
@@ -27,10 +27,4 @@ ol {
 
 a {
   text-decoration: none;
-
-  // &:visited,
-  // &:active,
-  // &:focus {
-  //   color: black;
-  // }
 }

@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import type { IUser } from './models/types';
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { authSliceActions, isStoredTokenValid } from './store/reducers/authSlice';
-import { storeScroll } from './helpers/headerAnimation';
+//import { storeScroll } from './helpers/headerAnimation';
 import { useTranslation, Trans } from 'react-i18next';
 
 // Update scroll position for first time
-storeScroll();
 
+//storeScroll();
 function App() {
   const authState = useAppSelector((state) => state.authReducer);
   const dispatch = useAppDispatch();

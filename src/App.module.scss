@@ -3,8 +3,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  // align-items: center;
-  //background-color: salmon;
 
   &__header {
     display: flex;
@@ -12,8 +10,10 @@
     height: 3rem;
     padding: 2rem 2rem;
     position: sticky;
-    top: 10 rem;
+    top: 0;
     background: base.$gradient-main;
+    z-index: 50;
+    opacity: 0.95;
   }
 
   &__main {
@@ -24,7 +24,6 @@
     flex-shrink: 0;
     flex-basis: auto;
     display: flex;
-    overflow: hidden;
   }
 
   &__footer {
@@ -35,16 +34,11 @@
 }
 
 html:not([data-scroll='0']) {
-  header {
-    display: flex;
-    align-items: center;
-    height: 3rem;
-    background: rgb(2, 0, 36);
+  .app__header {
     background: base.$gradient-secondary;
     position: sticky;
     top: 0;
-
-    transition: all 0.2s ease-in;
+    transition: all 0.3s ease-in;
     opacity: 0.95;
   }
 }

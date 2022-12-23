@@ -12,6 +12,9 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import BoardsPage from './pages/BoardsPage/BoardsPage';
 import BoardPage from './pages/BoardPage/BoardPage';
 import './models/i18next.ts';
+import { storeScroll } from './helpers/headerAnimation';
+
+storeScroll();
 
 const ROUTES = [
   {

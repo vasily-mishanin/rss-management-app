@@ -5,6 +5,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import React, { useState } from 'react';
+import { useTranslation, Trans } from 'react-i18next';
 
 type FormColumnEditProps = {
   onClose: () => void;
@@ -15,6 +16,7 @@ type FormColumnEditProps = {
 function FormColumnEdit({ onClose, fieldValue, onSubmit }: FormColumnEditProps) {
   const [columnTitle, setColumnTitle] = useState(fieldValue);
   const [validationError, setValidationError] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const isTextValid = (text: string) => {
     const regExpr = /^[A-Za-z0-9 ]{3,}$/;
@@ -47,11 +49,11 @@ function FormColumnEdit({ onClose, fieldValue, onSubmit }: FormColumnEditProps) 
       <TextField
         className={classes.input}
         id='standard-basic'
-        label='Column title'
+        label={i18n.resolvedLanguage === 'ru' ? 'Название колонки' : 'Column title'}
         variant='standard'
         value={columnTitle}
         error={validationError}
-        helperText='3 or more latin letters/digits'
+        helperText={i18n.resolvedLanguage === 'ru' ? '3 и более символов' : '3 or more letters/digits'}
         onChange={handleChange}
       />
       <ButtonGroup className={classes.actions}>

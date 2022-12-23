@@ -34,7 +34,7 @@ function WelcomePage() {
         </div>
       </div>
       <div className={classes.video}>
-        <iframe src='https://www.youtube.com/embed/Gl5WnyeV8T0'></iframe>
+        <iframe title='how to use the app' src='https://www.youtube.com/embed/MsJsml8baFA'></iframe>
       </div>
 
       <Paper elevation={3} className={classes.personalInfo}>
