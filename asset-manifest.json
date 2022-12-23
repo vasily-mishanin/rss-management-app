@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "/rss-management-app/static/css/main.38bca0cc.css",
-    "main.js": "/rss-management-app/static/js/main.54bd2140.js",
+    "main.css": "/rss-management-app/static/css/main.95a202ea.css",
+    "main.js": "/rss-management-app/static/js/main.8676c647.js",
     "static/js/787.28cb0dcd.chunk.js": "/rss-management-app/static/js/787.28cb0dcd.chunk.js",
+    "static/media/kanbanwork1.jpg": "/rss-management-app/static/media/kanbanwork1.6bdada16787305602e29.jpg",
     "static/media/wood-pattern.png": "/rss-management-app/static/media/wood-pattern.7723af6206c4fed53548.png",
-    "static/media/taiichi_ohno.jpg": "/rss-management-app/static/media/taiichi_ohno.1410358f0695af288584.jpg",
     "static/media/logo.png": "/rss-management-app/static/media/logo.d1ae836699e54f2df908.png",
     "static/media/logo-rss-js.svg": "/rss-management-app/static/media/logo-rss-js.ad178c0df28bc133be34.svg",
     "index.html": "/rss-management-app/index.html",
-    "main.38bca0cc.css.map": "/rss-management-app/static/css/main.38bca0cc.css.map",
-    "main.54bd2140.js.map": "/rss-management-app/static/js/main.54bd2140.js.map",
+    "main.95a202ea.css.map": "/rss-management-app/static/css/main.95a202ea.css.map",
+    "main.8676c647.js.map": "/rss-management-app/static/js/main.8676c647.js.map",
     "787.28cb0dcd.chunk.js.map": "/rss-management-app/static/js/787.28cb0dcd.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.38bca0cc.css",
-    "static/js/main.54bd2140.js"
+    "static/css/main.95a202ea.css",
+    "static/js/main.8676c647.js"
   ]
 }
