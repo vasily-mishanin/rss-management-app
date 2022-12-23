@@ -6,7 +6,9 @@ It useful for self organizing too.
 
 ##### Rolling Scopes School final project
 
-#### Deploy https://vasily-mishanin.github.io/rss-management-app
+#### App Deploy https://vasily-mishanin.github.io/rss-management-app
+
+#### Backend Deploy https://rss-react-final-task-backend.herokuapp.com
 
 ### Features
 
